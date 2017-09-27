@@ -1,0 +1,210 @@
+;; See the corresponding `jmh.sample` namespace for the example fns
+;; used in this file.
+;;
+;; For more information on jmh benchmarking, please see the openjdk
+;; jmh-samples project.
+
+{
+ :benchmarks
+ ;; The :benchmarks key gives a sequence of benchmarks to run.
+ [
+  ;; In the simplest case, just a symbol denoting a var or an expression
+  ;; that evaluates to a fn will suffice.
+  ;;
+  ;; The given fn will be called with no arguments to run the benchmark.
+  ;; If a symbol only gives the namespace, the -main fn will be called.
+  jmh.sample/spin
+
+  ;; In general however, a map will be provided. This map provides the
+  ;; fn arguments and/or jmh options. See subsequent sections for more
+  ;; about arguments and options.
+  {:fn jmh.sample/sum
+   :args [:random-num]
+   :options {:mode :single-shot}}
+
+  ;; Specify :apply when the last argument is a sequence whose items
+  ;; should be applied as arguments to the fn. Also, when benchmarking
+  ;; the same var multiple times, a name may be given to disambiguate.
+  {:name :sum-seq
+   :fn jmh.sample/sum
+   :args [:random-nums]
+   :apply true}
+
+  ;; Options can also be given in the form of a keyword or composite
+  ;; sequence of maps and/or keywords. Option keywords are defined in
+  ;; the top-level :options section, described later.
+  {:fn jmh.sample/add
+   :args [:random-num, :random-num]
+   :options [:fast {:fork 0}]}
+
+  ;; The var below is declared to take and return a primitive long in
+  ;; the 'jmh.sample' ns. In this case, any state arguments will be
+  ;; provided as unboxed primitive values where appropriate, and no
+  ;; boxing will happen on the fn return value.
+  ;;
+  ;; Note that the state in question must yield a Long or Double value,
+  ;; or else an exception will be thrown. Also note that the unboxing
+  ;; will happen before the benchmark runs and will not affect timing.
+  {:name :inc
+   :fn jmh.sample/add
+   :args [:random-num]}
+
+  ;; To avoid repeating the same options, arguments, etc., for multiple
+  ;; benchmarks, a :fn vector may be given. Additionally, if each :fn
+  ;; shares a single namespace, :ns may be used as the namespace for
+  ;; each symbol to form the complete vars.
+  {:ns jmh.sample
+   :fn [hasheq hashcode]
+   :args [:int-array]}
+
+  ;; Parameters (see below) and JMH infrastructure objects are also
+  ;; available using the 'param' and 'jmh' keyword prefixes,
+  ;; respectively. To help differentiate states from jmh and parameter
+  ;; arguments, the 'state' keyword prefix may optionally be used.
+  ;;
+  ;; Normally, the generated benchmark methods return whatever the
+  ;; specified fn returns (usually Object). Specify :void to generate a
+  ;; void method. This is an advanced case and generally requires the
+  ;; use of jmh Blackhole objects to ensure accurate benchmarks.
+  {:fn jmh.sample/consume
+   :args [:jmh/blackhole
+          :param/size
+          :state/service
+          :state/composite
+          :state/counters]
+   :void true}]
+
+
+
+ :selectors
+ ;; Benchmark :selectors can be used to run a subset of the defined
+ ;; benchmarks. By default, all :benchmarks are run (or, more
+ ;; accurately, all that match the :jmh/default selector.)
+ ;;
+ ;; Each key names a filter keyword that can be given when running
+ ;; benchmarks. Each value is a expression that should evaluate to a
+ ;; predicate that is passed the normalized benchmark map.
+ {:non-void (complement :void)
+  :sum (comp #{"sum"} name :fn)}
+
+
+
+ :options
+ ;; Option keywords. Selectively enabled in specific :benchmarks. The
+ ;; special keyword :jmh/default gives the defaults for all benchmarks.
+ ;;
+ ;; Time units may be specified as a short or long keyword. For example,
+ ;; :ns, :nanoseconds; :us, :microseconds.
+ {
+  :jmh/default {:mode :average}
+  :fast {:mode :single-shot}
+  :stress {:mode :all}
+
+  :example
+  {
+   :group "A"              ;; Thread group name.
+   :mode :average          ;; Defaults to :throughput. May also be a sequence, or :all.
+   :ops-per-invocation 10  ;; The amount of logical "operations" per call.
+   :output-time-unit :sec  ;; Report results using the following time unit.
+   :threads 3              ;; Worker threads. Defaults to the available processors.
+   :timeout [500 :ms]      ;; Interrupt the worker thread if the run exceeds this maximum.
+
+   :fork        ;; Give a number instead of a map to specify only the :count.
+   {
+    :count 1    ;; The number of forks (as in Unix). If 0, disable forking.
+    :warmups 0  ;; The number of warmup forks that ignore results.
+    :jvm        ;; Modify the java subprocess that is forked.
+    {
+     :args ["-Xmx512m"]             ;; Override the jvm parent process args.
+     :java "/usr/bin/java"          ;; The path to the java executable.
+     :prepend-args ["-cp" ".:lib"]  ;; Prepend these to the process args.
+     :append-args ["-ea"]}}         ;; Append these to the process args.
+
+   :measurement      ;; Give a number to specify only the :iterations.
+   {
+    :count 50        ;; fn calls per iteration. Some modes ignore this option.
+    :iterations 5    ;; Total measurements to do.
+    :time [10 :us]}  ;; Minimum time for each measurement.
+
+   :warmup           ;; Same as :measurement, but for warmup benchmarks only.
+   {:time [20 :seconds]}}}
+
+
+
+ :states
+ ;; State keywords used by benchmarks and other states.
+ {
+  ;; In the simplest form, either a var symbol or an expression that
+  ;; evaluates to a fn can be given.
+  ;;
+  ;; If a symbol does not have a namespace, 'clojure.core' is assumed.
+  :random-nums jmh.sample/random-nums
+  :random-num (fn [] (rand-int Integer/MAX_VALUE))
+
+  ;; More generally, a map is provided. Like benchmarks, states may also
+  ;; utilize parameters, optionally prefixed with 'param'. See the
+  ;; :params section below for more.
+  :random-bytes
+  {:fn jmh.sample/random-bytes
+   :args [:size]}
+
+  ;; States may also use receive other states, prefixed with 'state'.
+  :composite
+  {:fn vector
+   :args [:jmh/benchmark-params
+          :param/edn
+          :state/temp-file
+          :state/random-bytes]}
+
+  ;; The above examples were actually shortcuts for specifying the
+  ;; :setup phase fixture fn at the :trial level, for the default scope.
+  ;;
+  ;; Additional levels and phases are available for more control over
+  ;; the state value at each point in the benchmark lifecycle. In the
+  ;; order invoked, the :trial, :iteration, and :invocation keys give
+  ;; the :setup and :teardown phase fns for each level.
+  ;;
+  ;; At each level, if defined, the :setup fixture fn receives the
+  ;; current state value (except at the initial :trial level) and any
+  ;; specified :args to produce the state value for that level.
+  ;;
+  ;; The :teardown fn can optionally be used to alter and/or dispose
+  ;; of the current value after the given level has executed.
+  ;;
+  ;; If no :trial :setup fn is provided, the initial value is nil.
+  :int-array
+  {:scope :benchmark
+   :trial {:setup {:fn (comp int-array range)
+                   :args [:param/size]}}}
+
+  ;; As a shortcut, :setup and/or :teardown keys in the top-level map
+  ;; apply to the :trial lifecycle level.
+  :temp-file
+  {:setup jmh.sample/temp-file
+   :teardown clojure.java.io/delete-file}
+
+  ;; Fixture fns should normally return the updated state value. Specify
+  ;; :void to ignore the return value. This usually implies a mutable
+  ;; state value.
+  :service
+  {:setup jmh.sample/->MockApi
+   :teardown jmh.sample/dispose!
+   :iteration {:setup {:fn jmh.sample/start!, :void true}
+               :teardown {:fn jmh.sample/stop!, :void true}}}
+
+  ;; To support a few advanced features like jmh AuxCounters, a
+  ;; package-prefixed java class may be given. This class must be a
+  ;; properly annotated jmh state class, available on the classpath
+  ;; during the run.
+  :counters io.github.jgpc42.jmh.sample.Counters}
+
+
+
+ :params
+ ;; Parameter sequences used by :benchmarks and :states. Any valid edn
+ ;; string or readable Clojure value is accepted.
+ ;;
+ ;; If a default sequence value is empty, nil will be provided if not
+ ;; overridden with a value when running benchmarks.
+ {:edn ["#inst \"2017-08-05\"" {:magic 0xcafebabe}]
+  :size [42]}}

@@ -1,0 +1,7 @@
+.dir-locals.el
+.lein-*
+.nrepl-*
+pom.xml
+pom.xml.asc
+test-aot.sh
+target/

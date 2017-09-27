@@ -1,0 +1,5 @@
+"Benchmark","Mode","Threads","Samples","Score","Score Error (99.9%)","Unit","Param: _param_0000_count"
+"foo._0_expr.run","sample",1,156679,0.001283,0.000036,"s/op",1
+"foo._0_expr.run:run·p0.00","sample",1,1,0.001005,NaN,"s/op",1
+"foo._0_expr.run:run·p0.50","sample",1,1,0.001071,NaN,"s/op",1
+"foo._0_expr.run:·class.load","sample",1,200,0.000000,0.000000,"classes/sec",1
