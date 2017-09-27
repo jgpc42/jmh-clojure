@@ -76,7 +76,7 @@ Now to run the benchmarks. We'll start a REPL in our project and evaluate the fo
   (-> "benchmarks.edn" io/resource slurp edn/read-string))
 
 (def bench-opts
-  {:type :quick ;; alias for some common jmh options
+  {:type :quick
    :params {:count [31 100000]}
    :profilers ["gc"]})
 
