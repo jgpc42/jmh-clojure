@@ -1,7 +1,7 @@
 (def version
   {:jmh "1.19"})
 
-(defproject jmh-clojure "0.1.0-SNAPSHOT"
+(defproject jmh-clojure "0.1.0"
   :description "Benchmarking with JMH, the Java Microbenchmark Harness, from Clojure."
   :url "https://github.com/jgpc42/jmh-clojure"
   :license {:name "Eclipse Public License"
