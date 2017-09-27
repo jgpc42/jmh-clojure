@@ -76,7 +76,7 @@ Now to run the benchmarks. We'll start a REPL in our project and evaluate the fo
   (-> "benchmarks.edn" io/resource slurp edn/read-string))
 
 (def bench-opts
-  {:type :quick ;; shortcut for some common jm
+  {:type :quick ;; alias for some common jmh options
    :params {:count [31 100000]}
    :profilers ["gc"]})
 
@@ -97,7 +97,7 @@ Benchmarking expressions or fns manually without the data specification is also 
 
 ### More information
 
-As previously mentioned, please see the [sample file][sample] for the complete benchmark environment reference. For `run` options, see the [docs][doc]. Also, see the [wiki][wiki] for additional topics.
+As previously mentioned, please see the [sample file][sample] for the complete benchmark environment reference. For `run` options, see the [docs][run-doc]. Also, see the [wiki][wiki] for additional topics.
 
 ### Running the tests
 
@@ -116,11 +116,11 @@ Distributed under the Eclipse Public License, the same as Clojure.
 
 
 [criterium]:  https://github.com/hugoduncan/criterium
-[docs]:       https://jgpc42.github.io/jmh-clojure/doc/jmh.core.html#var-run
-[extended]:   https://github.com/jgpc42/jmh-clojure/wiki/Forking
+[extended]:   https://github.com/jgpc42/jmh-clojure/wiki/Extended
 [jmh]:        http://openjdk.java.net/projects/code-tools/jmh/
 [lein-jmh]:   https://github.com/jgpc42/lein-jmh
 [result]:     https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-results-edn
+[run-doc]:    https://jgpc42.github.io/jmh-clojure/doc/jmh.core.html#var-run
 [sample]:     https://github.com/jgpc42/jmh-clojure/blob/master/resources/sample.jmh.edn
 [samples]:    http://hg.openjdk.java.net/code-tools/jmh/file/1ddf31f810a3/jmh-samples/src/main/java/org/openjdk/jmh/samples/
 [utils]:      https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-utils-clj
