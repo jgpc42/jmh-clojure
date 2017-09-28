@@ -148,7 +148,7 @@
   {:fn jmh.sample/random-bytes
    :args [:size]}
 
-  ;; States may also use receive other states, prefixed with 'state'.
+  ;; States may also use other states, prefixed with 'state'.
   :composite
   {:fn vector
    :args [:jmh/benchmark-params
