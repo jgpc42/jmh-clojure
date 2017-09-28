@@ -1,6 +1,10 @@
 (def version
   {:jmh "1.19"})
 
+(def boot-classpath
+  (str "-Xbootclasspath:"
+       (System/getProperty "sun.boot.class.path")))
+
 (defproject jmh-clojure "0.1.1-SNAPSHOT"
   :description "Benchmarking with JMH, the Java Microbenchmark Harness, from Clojure."
   :url "https://github.com/jgpc42/jmh-clojure"
@@ -15,6 +19,7 @@
   :min-lein-version "2.0.0"
   :jar-exclusions [#".+\.java$"]
   :java-source-paths ["java"]
+  :javac-options ["-target" "1.6", "-source" "1.6" ~boot-classpath]
   :test-selectors {:unit (complement :integration)}
 
   :aliases {"test-all" ["do" "javac," "test,"
