@@ -1,3 +1,6 @@
+[![Clojars Project](https://img.shields.io/clojars/v/jmh-clojure.svg)](https://clojars.org/jmh-clojure)
+[![Travis CI](https://travis-ci.org/jgpc42/jmh-clojure.svg?branch=master)](https://travis-ci.org/jgpc42/jmh-clojure)
+
 ### Dependency information
 
 Leiningen
