@@ -52,8 +52,8 @@
     :type           keyword. An alias for a common option set. For
                     example, :quick. See the `jmh.option` namespace.
 
-    :verbose        if true or :extra, collect additional benchmark
-                    info during the run. If :silent or false, don't
+    :verbose        if true or :extra, generate additional :status
+                    output during the run. If :silent or false, don't
                     collect any. Provide :normal for the default.
 
     :warmups        map. The :mode key is one of :indi, :bulk, or
