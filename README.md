@@ -6,7 +6,7 @@
 Leiningen
 
 ``` clojure
-[jmh-clojure "0.1.1"]
+[jmh-clojure "0.1.2"]
 ```
 
 Maven
@@ -15,7 +15,7 @@ Maven
 <dependency>
   <groupId>jmh-clojure</groupId>
   <artifactId>jmh-clojure</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
 </dependency>
 ```
 
