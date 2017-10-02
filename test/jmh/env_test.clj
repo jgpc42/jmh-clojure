@@ -13,14 +13,18 @@
 (deftest test-filter-by-selectors
   (let [selectors {:a #(#{1 2} %)
                    :b #(zero? (mod % 3))
-                   :c #(zero? (mod % 5))}]
-    (are [s xs] (= xs (env/filter-by-selectors
-                       selectors s (range 11)))
+                   :c #(zero? (mod % 5))
+                   :d (constantly false)}]
+    (are [s xs] (= xs (seq (env/filter-by-selectors
+                            selectors s (range 11))))
       [] (range 11)
       :a [1 2]
       :b [0 3 6 9]
       [:a :b] [0 1 2 3 6 9]
-      [:a :b :c] [0 1 2 3 5 6 9 10])))
+      [:a :b :c] [0 1 2 3 5 6 9 10]
+      :d nil
+      [:a :d] [1 2]
+      [:e :f] nil)))
 
 (deftest test-select-benchmarks
   (let [named #(comp (partial = %) :name)

@@ -26,8 +26,11 @@
   by any predicate value of selectors that returns true."
   [selectors sels xs]
   (let [sels (if (keyword? sels) [sels] sels)]
-    (if-let [fns (seq (keep selectors sels))]
-      (for [x xs, :when (some #(% x) fns)], x)
+    (if (seq sels)
+      (let [fns (seq (keep selectors sels))]
+        (for [x xs
+              :when (some #(% x) fns)]
+          x))
       xs)))
 
 ;;;
