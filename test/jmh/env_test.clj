@@ -37,10 +37,15 @@
                    :b (named :b)
                    :c (named :c)
                    :d (named :d)
-                   :e (named :e)}
+                   :e (named :e)
+                   :f (constantly false)}
         opts {:select [:a :c :e]
               :warmups {:select [:d :e]}}]
-    (is (= 5 (count (env/select-benchmarks selectors {} benchmarks))))
+    (are [n m] (= n (count (env/select-benchmarks selectors m benchmarks)))
+      5 {}
+      0 {:select :f}
+      1 {:select :f, :warmups {:select :a}}
+      1 {:select :a, :warmups {:select :f}})
     (is (= [{:name :a}
             {:name :c}
             {:name :e}

@@ -156,7 +156,8 @@
 
         selects (:select opts :jmh/default)
         includes (get-in opts [:warmups :select])
-        warmups (filter-by-selectors selectors includes benchmarks)
+        warmups (when includes
+                  (filter-by-selectors selectors includes benchmarks))
         benchmarks (filter-by-selectors selectors selects benchmarks)
 
         warmups (->> (remove (set benchmarks) warmups)
