@@ -3,7 +3,8 @@
             [jmh.sample :as sample]
             [jmh.test-util :as test]
             [clojure.set :as set]
-            [clojure.test :refer :all]))
+            [clojure.test :refer :all])
+  (:import [org.openjdk.jmh.runner NoBenchmarksException]))
 
 (deftest test-profilers
   (is (set/select (comp #{"gc"} :name)
@@ -20,6 +21,7 @@
                     :arguments ["-p" "amount=100"]
                     :externs [extern])
         result (core/run test/sample-env opts)]
+
     (is (= `[[sample/spin 0]
              [sample/sum 0] [sample/sum 0]
              [sample/add 0] [sample/add 0]
@@ -29,3 +31,20 @@
            (for [r result]
              [(:fn r (:method r))
               (count (:params r))])))))
+
+(deftest ^:integration test-run
+  (let [env `{:benchmarks [rand]
+              :selectors {:x (constantly true)
+                          :y (constantly false)}}]
+
+    (testing "all"
+      (is (seq (core/run env test/options))))
+
+    (testing "empty"
+      (is (thrown? NoBenchmarksException (core/run {}))))
+
+    (testing "none selected"
+      (are [m] (thrown? NoBenchmarksException
+                        (core/run env (merge test/options m)))
+        {:select :y}
+        {:select :y, :warmups {:select :x}}))))

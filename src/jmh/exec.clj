@@ -92,7 +92,7 @@
       (catch RunnerException e
         (if-let [cause (get-cause e)]
           (throw cause)
-          (if (.contains (.getMessage e) option/ignore-lock)
+          (if (.contains (or (.getMessage e) "") option/ignore-lock)
             (let [msg (str "could not acquire jmh lock file "
                            "(is another benchmark in progress?): "
                            "use :ignore-lock to bypass.")]
