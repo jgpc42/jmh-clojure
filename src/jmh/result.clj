@@ -11,6 +11,8 @@
   "Update the map with the result of parsing the xsv field tuple."
   (fn [m entry] (first entry)))
 
+(def ^:private assoc-sorted (fnil assoc (sorted-map)))
+
 ;;;
 
 (defn merge-secondary
@@ -23,7 +25,7 @@
                         label (get r secondary-key)
                         r (dissoc r secondary-key :index :method
                                   :mode :params :threads)]
-                    (update m k assoc label r)))
+                    (update m k assoc-sorted label r)))
         row-map (->> secondaries
                      (reduce add-row {}))
         result-key (-> secondary-key name (str "s") keyword)]
@@ -106,5 +108,5 @@
       (if (.startsWith p state/param-field-prefix)
         (let [n (count state/param-field-prefix)
               k (keyword (subs (.toLowerCase p) n))]
-          (update m :params assoc k (edn/read-string v)))
-        (update m :params assoc p v)))))
+          (update m :params assoc-sorted k (edn/read-string v)))
+        (update m :params assoc-sorted p v)))))
