@@ -231,8 +231,8 @@
 (defn- time-unit
   "Convert a time unit to a string."
   [x]
-  (->> (util/check-valid "time-unit" util/time-unit? x)
-       (TimeValue. 1) TimeValue/tuToString))
+  (TimeValue/tuToString
+   (util/check-valid "time-unit" util/time-unit? x)))
 
 (defn- time-str
   "Convert a time tuple to an option string."
