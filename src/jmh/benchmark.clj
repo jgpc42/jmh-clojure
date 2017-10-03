@@ -79,7 +79,7 @@
 
         b (if (seq? f)
             (do (util/eval-fn f)
-                (assoc b :name (:name b "expr")))
+                (assoc b :name (:name b :expr)))
             b)
 
         arg-keyword (partial util/ns-keyword "state")

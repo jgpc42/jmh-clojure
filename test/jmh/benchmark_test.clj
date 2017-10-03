@@ -15,7 +15,7 @@
            (bench/normalize {:fn 'foo}))))
 
   (testing "expr"
-    (is (= {:fn `#(rand-int 42), :name "expr"}
+    (is (= {:fn `#(rand-int 42), :name :expr}
            (bench/normalize (list `fn* [] (list `rand-int 42)))))))
 
 (deftest test-flatten
