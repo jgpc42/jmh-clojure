@@ -255,7 +255,7 @@
 
 (defmethod arg-seq :iterations [[_ v]]
   ["-gc" (str (boolean (:gc v)))
-   "-si" (str (boolean (:synchronize v)))])
+   "-si" (str (boolean (:synchronize v true)))])
 
 (defmethod arg-seq :mode [[_ v]]
   (let [mode (fn [x]
