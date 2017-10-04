@@ -75,7 +75,8 @@
 (defn normalize
   "Ensure consistent benchmark format."
   [x]
-  (let [{f :fn :as b} (if (map? x) x {:fn x})
+  (let [b (if (map? x) x {:fn x})
+        f (util/check-valid "benchmark" b :fn)
 
         b (if (seq? f)
             (do (util/eval-fn f)

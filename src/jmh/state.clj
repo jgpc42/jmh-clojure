@@ -64,8 +64,9 @@
   "Return a seq of flattened fixture maps from the state."
   [s]
   (let [arg-keyword (partial util/ns-keyword "param")]
-    (for [{f :fn :as g} (fixture-seq s)]
-      (let [f (cond
+    (for [g (fixture-seq s)]
+      (let [f (util/check-valid "state fixture" g :fn)
+            f (cond
                 (var? f)
                 (util/var-symbol f)
                 (util/intern-symbol? f)
