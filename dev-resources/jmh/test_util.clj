@@ -13,6 +13,6 @@
    :warnings false})
 
 (defn env-file [fname]
-  (-> fname io/resource slurp read-string))
+  (-> fname io/resource slurp edn/read-string))
 
 (def sample-env (env-file "sample.jmh.edn"))

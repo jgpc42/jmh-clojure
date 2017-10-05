@@ -6,7 +6,7 @@
 
 (deftest test-readable-str
   (is (= 43 (-> (list `inc 42) util/readable-str
-                read-string eval))))
+                edn/read-string eval))))
 
 (deftest test-matching-arity
   (testing "uniadic"
