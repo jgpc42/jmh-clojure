@@ -246,7 +246,7 @@
   ["-foe" (str (boolean v))])
 
 (defmethod arg-seq :fork [[_ v]]
-  (-> ["-f" (str (:count v 1))]
+  (-> ["-f" (str (:count v 10))]
       (cat-arg v :warmups "-wf")
       (cat-arg v :java "-jvm")
       (cat-arg v [:jvm :args] "-jvmArgs")
