@@ -4,6 +4,7 @@
   (:require [jmh.util :as util]
             [jmh.instrument :as instrument]
             [jmh.emit :as emit]
+            [jmh.option :as option]
             [jmh.state :as state])
   (:import [clojure.lang Compiler$FnMethod IFn]
            [org.openjdk.jmh.annotations
@@ -206,7 +207,7 @@
 
 (defmethod ann-tuple :fork [[_ v]]
   [Fork (util/some-assoc
-         {:value (int (:count v 10))}
+         {:value (int (:count v (:forks option/defaults)))}
          :warmups (some-> v :warmups int)
          :jvm (:java v)
          :jvmArgs (get-in v [:jvm :args])

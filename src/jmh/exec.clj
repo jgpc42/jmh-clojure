@@ -246,7 +246,7 @@
   ["-foe" (str (boolean v))])
 
 (defmethod arg-seq :fork [[_ v]]
-  (-> ["-f" (str (:count v 10))]
+  (-> ["-f" (str (:count v (:forks option/defaults)))]
       (cat-arg v :warmups "-wf")
       (cat-arg v :java "-jvm")
       (cat-arg v [:jvm :args] "-jvmArgs")
@@ -254,8 +254,8 @@
       (cat-arg v [:jvm :append-args] "-jvmArgsAppend")))
 
 (defmethod arg-seq :iterations [[_ v]]
-  ["-gc" (str (boolean (:gc v)))
-   "-si" (str (boolean (:synchronize v true)))])
+  ["-gc" (str (boolean (:gc v (:gc option/defaults))))
+   "-si" (str (boolean (:synchronize v (:sync option/defaults))))])
 
 (defmethod arg-seq :mode [[_ v]]
   (let [mode (fn [x]

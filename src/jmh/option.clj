@@ -1,10 +1,19 @@
 (ns jmh.option
   "Helpers for transforming jmh option maps."
-  (:require [jmh.util :as util]))
+  (:require [jmh.util :as util])
+  (:import [org.openjdk.jmh.runner Defaults]))
 
 (def ^{:private true, :no-doc true
        :doc "Property definition to enable debug output."}
   debug "jmh-clojure.debug")
+
+(def ^{:internal true, :no-doc true
+       :doc "Default values for some required option map values that may
+            be left unspecified."}
+  defaults
+  {:gc Defaults/DO_GC
+   :forks Defaults/MEASUREMENT_FORKS
+   :sync Defaults/SYNC_ITERATIONS})
 
 (def ^{:internal true, :no-doc true
        :doc "Property definition to ignore lock file errors."}
