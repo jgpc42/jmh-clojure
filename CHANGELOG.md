@@ -1,3 +1,7 @@
+## 0.1.4 (2017-10-06)
+
+* BUGFIX: `:synchronize` should default to `true` when option `:iterations` is passed to `jmh.core/run`
+
 ## 0.1.3 (2017-10-02)
 
 * BUGFIX: exception when passing global time options (e.g., `:timeout`) to `jmh.core/run`
