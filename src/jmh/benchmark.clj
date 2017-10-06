@@ -206,7 +206,7 @@
 
 (defmethod ann-tuple :fork [[_ v]]
   [Fork (util/some-assoc
-         {:value (int (:count v))}
+         {:value (int (:count v 1))}
          :warmups (some-> v :warmups int)
          :jvm (:java v)
          :jvmArgs (get-in v [:jvm :args])
