@@ -1,6 +1,7 @@
 ## 0.1.5 (2017-10-07)
 
-* Undefined `:select` keywords to `jmh.core/run` use implicit selectors (#2)
+* Undefined `:select` keywords to `jmh.core/run` use implicit selectors ([#2][issue2])
+* Treat string `:params` as normal strings
 
 ## 0.1.4 (2017-10-06)
 
@@ -18,3 +19,7 @@
 ## 0.1.1 (2017-09-27)
 
 * Compile java files with `-target 1.6` for older JVM compatibility
+
+
+
+[issue2]:  https://github.com/jgpc42/jmh-clojure/issues/2
