@@ -22,16 +22,15 @@
     (apply merge-with merge-maps maps)))
 
 (defn filter-by-selectors
-  "Given the keyword(s) `sels` and predicate map `selectors`, filter
-  by any predicate value of selectors that returns true."
+  "Given the keyword `sels` and predicate map `selectors`, filter by any
+  predicate value of selectors that returns true."
   [selectors sels xs]
-  (let [sels (if (keyword? sels) [sels] sels)]
-    (if (seq sels)
-      (let [fns (seq (keep selectors sels))]
-        (for [x xs
-              :when (some #(% x) fns)]
-          x))
-      xs)))
+  (if (seq sels)
+    (let [fns (seq (keep selectors sels))]
+      (for [x xs
+            :when (some #(% x) fns)]
+        x))
+    xs))
 
 ;;;
 
@@ -151,8 +150,14 @@
                           (for [x (vals selectors)]
                             (if (ifn? x) x (eval x))))
 
-        selects (:select opts :jmh/default)
-        includes (get-in opts [:warmups :select])
+        selects (util/keyword-seq (:select opts :jmh/default))
+        includes (util/keyword-seq (get-in opts [:warmups :select]))
+
+        selectors (merge (reduce (fn [m k]
+                                   (assoc m k (comp #{k} :name)))
+                                 {} (concat selects includes))
+                         selectors)
+
         warmups (when includes
                   (filter-by-selectors selectors includes benchmarks))
         benchmarks (filter-by-selectors selectors selects benchmarks)

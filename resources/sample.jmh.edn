@@ -81,11 +81,19 @@
  ;; benchmarks. By default, all :benchmarks are run (or, more
  ;; accurately, all that match the :jmh/default selector.)
  ;;
- ;; Each key names a filter keyword that can be given when running
- ;; benchmarks. Each value is a expression that should evaluate to a
- ;; predicate that is passed the normalized benchmark map.
- {:non-void (complement :void)
-  :sum (comp #{"sum"} name :fn)}
+ ;; Each key names a filter keyword that can be given to the :select
+ ;; option when running benchmarks. Each value is a expression that
+ ;; should evaluate to a predicate that is passed the normalized
+ ;; benchmark map.
+ {
+  :non-void (complement :void)
+  :sum (comp #{"sum"} name :fn)
+
+  ;; The following selector selects benchmarks with :name equal to :inc.
+  ;; To avoid boilerplate in this common case, any undefined selector
+  ;; keyword passed to the :select option will implicitly use a :name
+  ;; predicate like the below based on the keyword.
+  :inc (comp #{:inc} :name)}
 
 
 

@@ -18,28 +18,23 @@
     (are [s xs] (= xs (seq (env/filter-by-selectors
                             selectors s (range 11))))
       [] (range 11)
-      :a [1 2]
-      :b [0 3 6 9]
+      [:a] [1 2]
+      [:b] [0 3 6 9]
       [:a :b] [0 1 2 3 6 9]
       [:a :b :c] [0 1 2 3 5 6 9 10]
-      :d nil
+      [:d] nil
       [:a :d] [1 2]
       [:e :f] nil)))
 
 (deftest test-select-benchmarks
-  (let [named #(comp (partial = %) :name)
-        benchmarks `[{:name :a, :fn vector}
+  (let [benchmarks `[{:name :a, :fn vector}
                      {:name :b, :fn vector}
                      {:name :c, :fn vector}
                      {:name :d, :fn vector}
                      {:name :e, :fn vector}]
-        selectors {:a (named :a)
-                   :b (named :b)
-                   :c (named :c)
-                   :d (named :d)
-                   :e (named :e)
+        selectors {:b (comp #{:a} :name)
                    :f (constantly false)}
-        opts {:select [:a :c :e]
+        opts {:select [:b :c :e :x]
               :warmups {:select [:d :e]}}]
     (are [n m] (= n (count (env/select-benchmarks selectors m benchmarks)))
       5 {}
