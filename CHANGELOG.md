@@ -1,3 +1,7 @@
+## 0.1.5 (2017-10-07)
+
+* Undefined `:select` keywords to `jmh.core/run` use implicit selectors (#2)
+
 ## 0.1.4 (2017-10-06)
 
 * BUGFIX: `:synchronize` should default to `true` when option `:iterations` is passed to `jmh.core/run`
