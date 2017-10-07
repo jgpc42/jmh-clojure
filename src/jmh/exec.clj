@@ -6,7 +6,7 @@
   (:import [java.io ByteArrayOutputStream File OutputStream PrintStream]
            [java.lang.management ManagementFactory]
            [org.openjdk.jmh.annotations Mode]
-           [org.openjdk.jmh.runner BenchmarkException Runner RunnerException]
+           [org.openjdk.jmh.runner BenchmarkException NoBenchmarksException Runner RunnerException]
            [org.openjdk.jmh.runner.options CommandLineOptions TimeValue]))
 
 (defmulti ^:private arg-seq
@@ -89,6 +89,8 @@
     (try
       (.run (Runner. cmd))
       (slurp out)
+      (catch NoBenchmarksException e
+        (throw (RunnerException. "no benchmarks defined/selected.")))
       (catch RunnerException e
         (if-let [cause (get-cause e)]
           (throw cause)

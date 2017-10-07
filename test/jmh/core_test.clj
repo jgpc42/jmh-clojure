@@ -3,8 +3,7 @@
             [jmh.sample :as sample]
             [jmh.test-util :as test]
             [clojure.set :as set]
-            [clojure.test :refer :all])
-  (:import [org.openjdk.jmh.runner NoBenchmarksException]))
+            [clojure.test :refer :all]))
 
 (deftest test-profilers
   (is (set/select (comp #{"gc"} :name)
@@ -41,10 +40,13 @@
       (is (seq (core/run env test/options))))
 
     (testing "empty"
-      (is (thrown? NoBenchmarksException (core/run {}))))
+      (is (thrown-with-msg?
+           Exception #"^no benchmarks"
+           (core/run {}))))
 
     (testing "none selected"
-      (are [m] (thrown? NoBenchmarksException
-                        (core/run env (merge test/options m)))
+      (are [m] (thrown-with-msg?
+                Exception #"^no benchmarks"
+                (core/run env (merge test/options m)))
         {:select :y}
         {:select :y, :warmups {:select :x}}))))
