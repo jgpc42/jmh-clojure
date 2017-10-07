@@ -201,10 +201,10 @@
 
 
  :params
- ;; Parameter sequences used by :benchmarks and :states. Any valid edn
- ;; string or readable Clojure value is accepted.
+ ;; Parameter sequences used by :benchmarks and :states. Any valid
+ ;; readable value is accepted.
  ;;
  ;; If a default sequence value is empty, nil will be provided if not
  ;; overridden with a value when running benchmarks.
- {:edn ["#inst \"2017-08-05\"" {:magic 0xcafebabe}]
+ {:edn [#inst "2017-08-05" {:magic 0xcafebabe}]
   :size [42]}}

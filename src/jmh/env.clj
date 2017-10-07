@@ -79,11 +79,8 @@
        (let [k (util/ns-keyword "param" k)
              pname (state/param-name k)
              xs (if (sequential? x) x [x])
-             xs (for [p xs]
-                  (if (string? p)
-                    p
-                    (util/readable-str p)))]
-         (assoc m k {:key k, :name pname, :values (vec xs)})))
+             pvals (mapv util/readable-str xs)]
+         (assoc m k {:key k, :name pname, :values pvals})))
      {} params)))
 
 (defn finalize-states
