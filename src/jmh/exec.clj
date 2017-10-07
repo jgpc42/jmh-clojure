@@ -223,12 +223,11 @@
   ([args m path arg]
    (cat-arg args m path arg str))
   ([args m path arg to-str]
-   (let [path (if (keyword? path) [path] path)]
-     (if-let [x (get-in m path)]
-       (if (sequential? x)
-         (concat args (cons arg (map to-str x)))
-         (concat args [arg (to-str x)]))
-       args))))
+   (if-let [x (get-in m (util/keyword-seq path))]
+     (if (sequential? x)
+       (concat args (cons arg (map to-str x)))
+       (concat args [arg (to-str x)]))
+     args)))
 
 (defn- time-unit
   "Convert a time unit to a string."
@@ -262,9 +261,10 @@
 (defmethod arg-seq :mode [[_ v]]
   (let [mode (fn [x]
                (let [mode (util/check-valid "mode" util/mode? x)]
-                 (.shortLabel ^Mode mode)))
-        xs (if (keyword? v) [v] v)]
-    ["-bm" (apply str (interpose \, (map mode xs)))]))
+                 (.shortLabel ^Mode mode)))]
+    ["-bm" (->> (util/keyword-seq v)
+                (map mode) (interpose \,)
+                (apply str))]))
 
 (defmethod arg-seq :ops-per-invocation [[_ v]]
   ["-opi" (str v)])

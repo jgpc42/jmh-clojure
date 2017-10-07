@@ -100,6 +100,11 @@
     (check (ifn? f) (str "form did not evaluate to a fn: " (pr-str form)))
     f))
 
+(defn keyword-seq
+  "Coerce value to a sequence of keywords."
+  [x]
+  (seq (if (keyword? x) [x] x)))
+
 (defn matching-arity
   "Returns the first arglist that can be applied with the given arity
   arguments, or nil if not found."

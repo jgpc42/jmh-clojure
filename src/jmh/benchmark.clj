@@ -222,7 +222,7 @@
 
 (defmethod ann-tuple :mode [[_ v]]
   (let [mode #(util/check-valid "mode" util/mode? %)]
-    [BenchmarkMode (if (keyword? v) [(mode v)] (mapv mode v))]))
+    [BenchmarkMode (mapv mode (util/keyword-seq v))]))
 
 (defmethod ann-tuple :ops-per-invocation [[_ v]]
   [OperationsPerInvocation (int v)])
