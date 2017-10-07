@@ -28,5 +28,5 @@
 
   :profiles
   {:1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}
-   :1.9 {:dependencies [[org.clojure/clojure "1.9.0-beta1"]]}
+   :1.9 {:dependencies [[org.clojure/clojure "1.9.0-beta2"]]}
    :repl {:source-paths ["dev"]}})
