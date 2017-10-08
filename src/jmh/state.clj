@@ -105,8 +105,11 @@
 (defn fn-field-desc
   "Return the fixture field fn descriptor for the fixture map."
   [{f :fn :as g}]
-  (let [fvar (when (symbol? f)
-               (util/require-fn f))
+  (let [fvar (if (symbol? f)
+               (util/require-fn f)
+               (util/check (seq? f)
+                           (str "invalid :fn value: expected symbol, "
+                                "or fn expression sequence: " (pr-str f))))
 
         nargs (count (:args g))
         alists (some-> fvar meta :arglists sort seq)

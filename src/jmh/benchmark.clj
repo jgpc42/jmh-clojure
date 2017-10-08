@@ -26,8 +26,11 @@
 (defn fn-field-info
   "Return type data describing the fn field."
   [{f :fn :as b}]
-  (let [fvar (when (symbol? f)
-               (util/require-fn f))
+  (let [fvar (if (symbol? f)
+               (util/require-fn f)
+               (util/check (seq? f)
+                           (str "invalid :fn value: expected symbol, "
+                                "or fn expression sequence: " (pr-str f))))
         nargs (count (:args b))
 
         alists (some-> fvar meta :arglists sort seq)
@@ -89,9 +92,12 @@
         b (util/some-assoc b :args (seq args))
 
         f (cond
-            (var? f) (util/var-symbol f)
-            (util/bare-symbol? f) (symbol (name f) "-main")
-            :else f)]
+            (var? f)
+            (util/var-symbol f)
+            (util/bare-symbol? f)
+            (symbol (name f) "-main")
+            :else
+            f)]
 
     (assoc b :fn f)))
 
