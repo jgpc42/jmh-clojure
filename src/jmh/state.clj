@@ -74,8 +74,13 @@
                 :else
                 f)
             args (map arg-keyword (:args g))]
-        (when (seq? f)
-          (util/eval-fn f))
+
+        (if (seq? f)
+          (util/eval-fn f)
+          (util/check (symbol? f)
+                      (str "invalid state :fn value: expected symbol "
+                           "or fn expression sequence: " (pr-str f))))
+
         (util/some-assoc g :state s, :fn f, :args (seq args))))))
 
 (defn normalize
@@ -105,11 +110,8 @@
 (defn fn-field-desc
   "Return the fixture field fn descriptor for the fixture map."
   [{f :fn :as g}]
-  (let [fvar (if (symbol? f)
-               (util/require-fn f)
-               (util/check (seq? f)
-                           (str "invalid :fn value: expected symbol, "
-                                "or fn expression sequence: " (pr-str f))))
+  (let [fvar (when (symbol? f)
+               (util/require-fn f))
 
         nargs (count (:args g))
         alists (some-> fvar meta :arglists sort seq)

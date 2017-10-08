@@ -26,11 +26,8 @@
 (defn fn-field-info
   "Return type data describing the fn field."
   [{f :fn :as b}]
-  (let [fvar (if (symbol? f)
-               (util/require-fn f)
-               (util/check (seq? f)
-                           (str "invalid :fn value: expected symbol, "
-                                "or fn expression sequence: " (pr-str f))))
+  (let [fvar (when (symbol? f)
+               (util/require-fn f))
         nargs (count (:args b))
 
         alists (some-> fvar meta :arglists sort seq)
@@ -58,6 +55,10 @@
         ftype (or iface IFn)]
 
     (util/check (<= nargs 20) "max benchmark arity allowed is 20")
+    (util/check (or (symbol? f) (seq? f))
+                (str "invalid benchmark :fn value: expected symbol "
+                     "or fn expression sequence: " (pr-str f)))
+
     {:desc desc, :return ret, :type ftype}))
 
 (defn flatten
