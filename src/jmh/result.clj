@@ -36,10 +36,17 @@
   "Parse jmh csv output into a seq of maps."
   [pkg output]
   (let [init (with-meta {} {:jmh/pkg pkg})
+
+        tuple-score (fn [m]
+                      (-> (assoc m :score [(:score m) (:unit m)])
+                          (dissoc :unit)))
         results (->> (xsv/parse output)
-                     (map (partial reduce add-field init)))
+                     (map (partial reduce add-field init))
+                     (map tuple-score))
+
         percentiles (filter :percentile results)
         profilers (filter :profiler results)]
+
     (->> results
          (remove #(or (:percentile %) (:profiler %)))
          (merge-secondary :percentile percentiles)
@@ -86,7 +93,7 @@
   (assoc m :samples (Long/valueOf v)))
 
 (defmethod add-field "Score" [m [_ ^String v]]
-  (assoc m :score [(Double/valueOf v)]))
+  (assoc m :score (Double/valueOf v)))
 
 (defmethod add-field "Score Error (99.9%)" [m [_ ^String v]]
   (let [d (Double/valueOf v)]
@@ -98,7 +105,7 @@
   (assoc m :threads (Long/valueOf v)))
 
 (defmethod add-field "Unit" [m [_ v]]
-  (update m :score conj v))
+  (assoc m :unit v))
 
 (defmethod add-field :default [m [k v]]
   (if (= v "")
