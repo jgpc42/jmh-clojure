@@ -19,9 +19,12 @@
        :doc "Property definition to ignore lock file errors."}
   ignore-lock "jmh.ignoreLock")
 
-(def ^{:dynamic true
-       :doc "The option sets available for the :type shortcut."}
-  *type-aliases*
+(def ^:dynamic *type-aliases*
+  "The option sets available for the :type shortcut. By
+  default, the following types are available:
+
+    :quick  1 fork, 5 warmup/measurement iterations.
+    :test   no forking, single-shot, 1 thread."
   {:quick {:fail-on-error true
            :fork 1
            :measurement 5
