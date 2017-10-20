@@ -1,3 +1,8 @@
+## 0.1.6 (2017-10-20)
+
+* BUGFIX: sometimes score units would be missing in result maps
+* Better benchmark and state `:fn` validation
+
 ## 0.1.5 (2017-10-07)
 
 * Undefined `:select` keywords to `jmh.core/run` use implicit selectors ([#2][issue2])
