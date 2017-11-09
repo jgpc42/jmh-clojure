@@ -8,8 +8,10 @@ import clojure.lang.Var;
 
 import static clojure.lang.Symbol.intern;
 
+/** Utilities used by jmh proxy classes. */
 public final class Util {
 
+    /** Read and evaluate the given string as a fn. */
     public static IFn eval (String form) {
         Object val = Compiler.eval(Clojure.read(form));
         if (val instanceof IFn)
@@ -17,11 +19,13 @@ public final class Util {
         throw new RuntimeException("form did not evaluate to fn: " + form);
     }
 
+    /** Read the given string as edn data. */
     public static Object read (String form) {
         Clojure.var("clojure.core", "require").invoke(intern("clojure.edn"));
         return Clojure.var("clojure.edn", "read-string").invoke(form);
     }
 
+    /** Require and resolve as a fn the given var components. */
     public static IFn resolve (String ns, String name) {
         Object val = null;
 

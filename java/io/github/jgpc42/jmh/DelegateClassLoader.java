@@ -3,6 +3,7 @@ package io.github.jgpc42.jmh;
 import clojure.lang.DynamicClassLoader;
 import clojure.lang.IFn;
 
+/** This class is documented in the `jmh.util` namespace. */
 public class DelegateClassLoader extends DynamicClassLoader {
 
     private final IFn _load;
