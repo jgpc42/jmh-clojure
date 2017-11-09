@@ -96,7 +96,9 @@
   [form]
   (let [f (try
             (eval form)
-            (catch Exception _))]
+            (catch Exception e
+              (throw (ex-info "error while evaluating fn expression form"
+                              {:form form} e))))]
     (check (ifn? f) (str "form did not evaluate to a fn: " (pr-str form)))
     f))
 
