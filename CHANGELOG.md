@@ -1,3 +1,8 @@
+## 0.1.7 (2017-11-09)
+
+* Default `:fail-on-error` option to `true`
+* Improve error messages for `:fn` expressions
+
 ## 0.1.6 (2017-10-20)
 
 * BUGFIX: sometimes score units would be missing in result maps
