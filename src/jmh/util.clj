@@ -135,14 +135,17 @@
   its namespace is loaded if not already. If the var does not exist,
   or its value is not a fn, an error is thrown."
   [svar]
-  (check (and (namespace svar)
-              (try
-                (or (resolve svar)
-                    (require (symbol (namespace svar))))
-                (let [v (resolve svar)]
-                  (and v, (-> v meta :macro nil?), (ifn? @v), v))
-                (catch java.io.FileNotFoundException _)))
-         (str "value did not resolve to a fn: " (pr-str svar))))
+  (let [ns (namespace svar)]
+    (check (and ns
+                (try
+                  (or (resolve svar)
+                      (require (symbol ns)))
+                  (let [v (resolve svar)]
+                    (and v, (-> v meta :macro nil?), (ifn? @v), v))
+                  (catch java.io.FileNotFoundException e
+                    (throw (ex-info (str "error requiring namespace: " ns)
+                                    {:var svar} e)))))
+           (str "value did not resolve to a fn: " (pr-str svar)))))
 
 (defn some-assoc
   "Assoc each pair of key and value if the value is not nil."
