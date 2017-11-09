@@ -20,7 +20,11 @@
                     and should not generally need to be changed if using
                     a tool such as Leiningen or similar.
 
-    :fail-on-error  halt execution on any benchmark exception.
+    :externs        advanced option. See below.
+
+    :fail-on-error  halt execution on any benchmark exception. Defaults
+                    to true. Note that if this is false, benchmarks that
+                    fail will be missing from the returned sequence.
 
     :ignore-lock    do not fail if the jmh lock file cannot be obtained.
 

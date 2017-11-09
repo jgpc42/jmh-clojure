@@ -210,7 +210,8 @@
 (defn setup
   "Return the updated environment, suitable for generation."
   [env opts]
-  (let [opts (option/normalize opts)
+  (let [opts (-> (option/normalize opts)
+                 option/without-type-alias)
         opts (if (:instrument opts)
                (option/without-forking opts)
                opts)

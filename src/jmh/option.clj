@@ -25,7 +25,8 @@
 
     :quick  1 fork, 5 warmup/measurement iterations.
     :test   no forking, single-shot, 1 thread."
-  {:quick {:fail-on-error true
+  {:default {:fail-on-error true}
+   :quick {:fail-on-error true
            :fork 1
            :measurement 5
            :warmup 5}
@@ -43,14 +44,9 @@
       (#{"" "true" "1"} (System/getProperty debug))))
 
 (defn ^:internal ^:no-doc normalize
-  "Return the fully expanded options map."
+  "Return the options map with shortcuts expanded."
   [m]
-  (let [m (if-let [t (:type m)]
-            (->> (dissoc m :type)
-                 (merge (util/check-valid "type" *type-aliases* t)))
-            m)
-
-        expand (fn [m root val-key]
+  (let [expand (fn [m root val-key]
                  (let [x (get m root)]
                    (if (or (nil? x) (map? x))
                      m
@@ -82,3 +78,12 @@
   (let [arg (str "-D" ignore-lock "=true")
         path [:fork :jvm :prepend-args]]
     (update-in (normalize opts) path conj arg)))
+
+(defn without-type-alias
+  "Return the given options with the :type alias expanded and merged. If
+  no type is provided, use the :default type. See `*type-aliases*`."
+  [opts]
+  (if-let [t (:type opts :default)]
+    (->> (dissoc opts :type)
+         (merge (normalize (util/check-valid "type" *type-aliases* t))))
+    opts))
