@@ -214,5 +214,8 @@
  ;;
  ;; If a default sequence value is empty, nil will be provided if not
  ;; overridden with a value when running benchmarks.
+ ;;
+ ;; Specifying a non-sequence value is equivalent to specifying a single
+ ;; element sequence containing said value.
  {:edn [#inst "2017-08-05" {:magic 0xcafebabe}]
-  :size [42]}}
+  :size 42}}
