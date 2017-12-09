@@ -3,13 +3,19 @@
 
 ### Dependency information
 
-Leiningen
+[Leiningen][lein]
 
 ``` clojure
 [jmh-clojure "0.1.7"]
 ```
 
-Maven
+[tools.deps.alpha][deps] ([wiki example][cli])
+
+```clojure
+{jmh-clojure {:mvn/version "0.1.7"}}
+```
+
+[Maven][maven]
 
 ``` xml
 <dependency>
@@ -18,6 +24,8 @@ Maven
   <version>0.1.7</version>
 </dependency>
 ```
+
+this library supports Clojure 1.7 through 1.9.
 
 ### What is it?
 
@@ -118,10 +126,14 @@ Distributed under the Eclipse Public License, the same as Clojure.
 
 
 
+[cli]:        https://github.com/jgpc42/jmh-clojure/wiki/Clojure-1.9-CLI
 [criterium]:  https://github.com/hugoduncan/criterium
+[deps]:       https://github.com/clojure/tools.deps.alpha
 [extended]:   https://github.com/jgpc42/jmh-clojure/wiki/Extended
 [jmh]:        http://openjdk.java.net/projects/code-tools/jmh/
+[lein]:       http://github.com/technomancy/leiningen
 [lein-jmh]:   https://github.com/jgpc42/lein-jmh
+[maven]:      http://maven.apache.org
 [result]:     https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-results-edn
 [run-doc]:    https://jgpc42.github.io/jmh-clojure/doc/jmh.core.html#var-run
 [sample]:     https://github.com/jgpc42/jmh-clojure/blob/master/resources/sample.jmh.edn

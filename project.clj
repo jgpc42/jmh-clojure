@@ -5,7 +5,7 @@
   (str "-Xbootclasspath:"
        (System/getProperty "sun.boot.class.path")))
 
-(defproject jmh-clojure "0.1.7"
+(defproject jmh-clojure "0.1.8-SNAPSHOT"
   :description "Benchmarking with JMH, the Java Microbenchmark Harness, from Clojure."
   :url "https://github.com/jgpc42/jmh-clojure"
   :license {:name "Eclipse Public License"
@@ -28,5 +28,5 @@
 
   :profiles
   {:1.7 {:dependencies [[org.clojure/clojure "1.7.0"]]}
-   :1.9 {:dependencies [[org.clojure/clojure "1.9.0-RC1"]]}
+   :1.9 {:dependencies [[org.clojure/clojure "1.9.0"]]}
    :repl {:source-paths ["dev"]}})
