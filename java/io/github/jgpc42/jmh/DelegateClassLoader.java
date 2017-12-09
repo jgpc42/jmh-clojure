@@ -13,7 +13,7 @@ public class DelegateClassLoader extends DynamicClassLoader {
         _load = load;
     }
 
-    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+    @Override protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         Object val = _load.invoke(name);
 
         if (!(val instanceof byte[]))
