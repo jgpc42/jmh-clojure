@@ -9,7 +9,7 @@
 [jmh-clojure "0.1.7"]
 ```
 
-[tools.deps.alpha][deps] ([wiki example][cli])
+[tools.deps.alpha][deps]
 
 ```clojure
 {jmh-clojure {:mvn/version "0.1.7"}}
@@ -25,7 +25,7 @@
 </dependency>
 ```
 
-this library supports Clojure 1.7 through 1.9.
+Clojure versions 1.7 through 1.9 are currently supported.
 
 ### What is it?
 
@@ -126,7 +126,6 @@ Distributed under the Eclipse Public License, the same as Clojure.
 
 
 
-[cli]:        https://github.com/jgpc42/jmh-clojure/wiki/Clojure-1.9-CLI
 [criterium]:  https://github.com/hugoduncan/criterium
 [deps]:       https://github.com/clojure/tools.deps.alpha
 [extended]:   https://github.com/jgpc42/jmh-clojure/wiki/Extended
