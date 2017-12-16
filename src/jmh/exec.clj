@@ -14,6 +14,9 @@
   "Update the options builder using the given map entry."
   (fn [b entry] (first entry)) :default ::default)
 
+(def ^{:doc "A registry map of aliases to profilers."}
+  profiler-aliases (atom {}))
+
 ;;;
 
 (defn re-escape
@@ -283,6 +286,7 @@
   (util/check (coll? v) "expected seq of profilers")
   (doseq [x v]
     (let [[prof ^String init] (if (coll? x) x [x ""])
+          prof (get @profiler-aliases prof prof)
           prof (if (symbol? prof)
                  (Class/forName (name prof))
                  prof)]

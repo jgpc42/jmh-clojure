@@ -125,3 +125,11 @@
                (for [[_ k desc] (re-seq #"(?m)^\s+([^\s]+):\s+(.+?)\s*$" s)]
                  {:name k, :desc desc, :supported ok?}))]
     (set (concat (make ok true) (make no false)))))
+
+(defn register-profiler-alias!
+  "Accepts a key `k` and a value `x` suitable for the `run` :profilers
+  option. Registers the given profiler value under the alias k. This
+  name may subsequently be used in place of x. Returns nil."
+  [k x]
+  (swap! exec/profiler-aliases assoc k x)
+  nil)
