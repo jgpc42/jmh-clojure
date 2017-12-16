@@ -244,7 +244,7 @@
   (.forks b (int (:count v (:forks option/defaults))))
   (when-let [x (:warmups v)]
     (.warmupForks b (int x)))
-  (when-let [x (:java v)]
+  (when-let [x (get-in v [:jvm :java])]
     (.jvm b (str x)))
   (when-let [x (get-in v [:jvm :args])]
     (.jvmArgs b (str-array x)))

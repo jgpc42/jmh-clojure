@@ -216,7 +216,7 @@
   [Fork (util/some-assoc
          {:value (int (:count v (:forks option/defaults)))}
          :warmups (some-> v :warmups int)
-         :jvm (:java v)
+         :jvm (get-in v [:jvm :java])
          :jvmArgs (get-in v [:jvm :args])
          :jvmArgsPrepend (get-in v [:jvm :prepend-args])
          :jvmArgsAppend (get-in v [:jvm :append-args]))])
