@@ -280,7 +280,8 @@
     (.param b (name k) (str-array x))))
 
 (defmethod build :profilers [^OptionsBuilder b [_ v]]
-  (doseq [x (if (string? v) [v] v)]
+  (util/check (coll? v) "expected seq of profilers")
+  (doseq [x v]
     (let [[prof ^String init] (if (coll? x) x [x ""])
           prof (if (symbol? prof)
                  (Class/forName (name prof))

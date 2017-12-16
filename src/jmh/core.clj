@@ -42,10 +42,10 @@
                     Parameters for externs (see below) are provided via
                     a special :jmh/externs key which gives a nested map.
 
-    :profilers      a string or seq of strings. Profilers to enable
-                    while benchmarking. See `profilers`. External
-                    profilers may be specified by package-prefixed
-                    symbol or class object.
+    :profilers      seq. Profilers to enable while benchmarking. See
+                    `profilers`. External profilers may be specified by
+                    giving the class as package-prefixed symbol, class
+                    object, or tuple of [class initialization-string].
 
     :progress       callback fn that will receive periodic progress
                     events. Overridden by :status.
@@ -109,6 +109,8 @@
   ([expr] `(run-expr ~expr {}))
   ([expr opts]
    `(run-fn (fn [] ~expr) ~opts)))
+
+;;;
 
 (defn profilers
   "Return a set of profiler maps. If :supported, the profiler :name is
