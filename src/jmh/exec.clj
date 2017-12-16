@@ -281,7 +281,7 @@
 
 (defmethod build :profilers [^OptionsBuilder b [_ v]]
   (doseq [x (if (string? v) [v] v)]
-    (let [[prof init] (if (coll? x) x [x ""])
+    (let [[prof ^String init] (if (coll? x) x [x ""])
           prof (if (symbol? prof)
                  (Class/forName (name prof))
                  prof)]
