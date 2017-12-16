@@ -6,12 +6,13 @@
   (:import [java.io ByteArrayOutputStream File OutputStream PrintStream]
            [java.lang.management ManagementFactory]
            [org.openjdk.jmh.annotations Mode]
+           [org.openjdk.jmh.results.format ResultFormatType]
            [org.openjdk.jmh.runner BenchmarkException NoBenchmarksException Runner RunnerException]
-           [org.openjdk.jmh.runner.options CommandLineOptions TimeValue]))
+           [org.openjdk.jmh.runner.options OptionsBuilder TimeValue]))
 
-(defmulti ^:private arg-seq
-  "Return a jmh command-line argument seq from the given map entry."
-  first :default ::default)
+(defmulti ^:private build
+  "Update the options builder using the given map entry."
+  (fn [b entry] (first entry)) :default ::default)
 
 ;;;
 
@@ -19,11 +20,6 @@
   "Return a pattern that will match the literal string."
   [s]
   (str "\\Q" s "\\E"))
-
-(defn re-alt
-  "Return a pattern that will try each alternative pattern."
-  [patterns]
-  (str "(?:" (apply str (interpose \| patterns)) ")"))
 
 (defn re-class
   "Return a pattern that will match the class, or if the second argument
@@ -71,23 +67,55 @@
           (.addSuppressed e s))
         e))))
 
+(defn include-patterns
+  "Returns a include regex pattern strings."
+  [benchmarks externs]
+  (concat (->> (remove :warmup benchmarks)
+               (map (comp re-class :class)))
+          (for [x externs
+                :when (not (:warmup x))]
+            (re-class (:class x x) (:select x ".+")))))
+
+(defn warmup-patterns
+  "Returns a warmup include regex pattern strings."
+  [benchmarks externs]
+  (concat (->> (filter :warmup benchmarks)
+               (map (comp re-class :class)))
+          (for [x externs
+                :when (:warmup x)]
+            (re-class (:class x) (:select x ".+")))))
+
 (defn- run*
   "Run the given command-line arguments and return the output."
-  [args status]
-  (let [log (cond
+  [benchmarks opts]
+  (let [status (:jmh/status opts)
+        log (cond
               (string? status)
               (io/file status)
               (not status)
               (doto (File/createTempFile "jmh" ".txt") .deleteOnExit))
         out (doto (File/createTempFile "jmh" ".xsv") .deleteOnExit)
 
-        args (if log (concat args ["-o" (str log)]) args)
-        args (concat args ["-rf" "CSV", "-rff" (str out)])
+        builder (OptionsBuilder.)]
 
-        cmd (CommandLineOptions. (into-array String args))]
+    (doseq [entry opts]
+      (build builder entry))
+
+    (doseq [re (warmup-patterns benchmarks (:externs opts))]
+      (.exclude builder re)
+      (.includeWarmup builder re))
+    (doseq [re (include-patterns benchmarks (:externs opts))]
+      (.include builder re))
+
+    (when log
+      (.output builder (str log)))
+
+    (doto builder
+      (.resultFormat ResultFormatType/CSV)
+      (.result (str out)))
 
     (try
-      (.run (Runner. cmd))
+      (.run (Runner. (.build builder)))
       (slurp out)
       (catch NoBenchmarksException e
         (throw (RunnerException. "no benchmarks defined/selected.")))
@@ -104,26 +132,6 @@
         (when-not status
           (.delete log))
         (.delete out)))))
-
-(defn benchmark-arguments
-  "Return the benchmark include, exclude, and warmup arguments."
-  [benchmarks externs]
-  (let [warmups (concat (->> (filter :warmup benchmarks)
-                             (map (comp re-class :class)))
-                        (for [x externs
-                              :when (:warmup x)]
-                          (re-class (:class x) (:select x ".+"))))
-        args (when (seq warmups)
-               (let [re (re-alt warmups)]
-                 ["-e" re, "-wmb" re]))
-
-        includes (concat (->> (remove :warmup benchmarks)
-                              (map (comp re-class :class)))
-                         (for [x externs
-                               :when (not (:warmup x))]
-                           (re-class (:class x x) (:select x ".+"))))
-        include (re-alt includes)]
-    (concat args [include])))
 
 (defn line-output-stream
   "Return a stream that will invoke the supplied callback fn for each
@@ -183,9 +191,7 @@
 (defn run
   "Run and update the benchmark environment with the jmh output."
   [{benchmarks :jmh/benchmarks, opts :jmh/options :as env}]
-  (let [args (concat (mapcat arg-seq opts)
-                     (benchmark-arguments benchmarks (:externs opts)))
-        ignore-orig (System/getProperty option/ignore-lock)
+  (let [ignore-orig (System/getProperty option/ignore-lock)
 
         out-orig System/out
         out (if-let [f (and (not (:status opts))
@@ -194,7 +200,8 @@
               out-orig)
 
         status (or (:status opts)
-                   (boolean (:progress opts)))]
+                   (boolean (:progress opts)))
+        opts (assoc opts :jmh/status status)]
 
     (when (:warnings opts true)
       (check-jvm-arguments benchmarks))
@@ -207,7 +214,7 @@
         (System/setOut out))
       (when (:ignore-lock opts)
         (System/setProperty option/ignore-lock "true"))
-      (assoc env :jmh/output (run* args status))
+      (assoc env :jmh/output (run* benchmarks opts))
       (finally
         (when (not= out out-orig)
           (.flush ^PrintStream out)
@@ -217,88 +224,93 @@
 
 ;;;
 
-(defn- cat-arg
-  "If the map contains a value at `path`, concat `arg` and it to `args`.
-  Otherwise return the args unmodified."
-  ([args m path arg]
-   (cat-arg args m path arg str))
-  ([args m path arg to-str]
-   (if-let [x (get-in m (util/keyword-seq path))]
-     (if (sequential? x)
-       (concat args (cons arg (map to-str x)))
-       (concat args [arg (to-str x)]))
-     args)))
+(defn- str-array [x]
+  (into-array String (map str (if (coll? x) x [x]))))
 
 (defn- time-unit
-  "Convert a time unit to a string."
+  "Convert a time unit keyword to a TimeUnit."
   [x]
-  (TimeValue/tuToString
-   (util/check-valid "time-unit" util/time-unit? x)))
+  (util/check-valid "time-unit" util/time-unit? x))
 
-(defn- time-str
-  "Convert a time tuple to an option string."
+(defn- time-value
+  "Convert a time tuple to TimeValue."
   [[n u]]
-  (str n (time-unit u)))
+  (TimeValue. n (time-unit u)))
 
-(defmethod arg-seq :arguments [[_ v]]
-  v)
+(defmethod build :fail-on-error [^OptionsBuilder b [_ v]]
+  (.shouldFailOnError b (boolean v)))
 
-(defmethod arg-seq :fail-on-error [[_ v]]
-  ["-foe" (str (boolean v))])
+(defmethod build :fork [^OptionsBuilder b [_ v]]
+  (.forks b (int (:count v (:forks option/defaults))))
+  (when-let [x (:warmups v)]
+    (.warmupForks b (int x)))
+  (when-let [x (:java v)]
+    (.jvm b (str x)))
+  (when-let [x (get-in v [:jvm :args])]
+    (.jvmArgs b (str-array x)))
+  (when-let [x (get-in v [:jvm :prepend-args])]
+    (.jvmArgsPrepend b (str-array x)))
+  (when-let [x (get-in v [:jvm :append-args])]
+    (.jvmArgsAppend b (str-array x))))
 
-(defmethod arg-seq :fork [[_ v]]
-  (-> ["-f" (str (:count v (:forks option/defaults)))]
-      (cat-arg v :warmups "-wf")
-      (cat-arg v :java "-jvm")
-      (cat-arg v [:jvm :args] "-jvmArgs")
-      (cat-arg v [:jvm :prepend-args] "-jvmArgsPrepend")
-      (cat-arg v [:jvm :append-args] "-jvmArgsAppend")))
+(defmethod build :iterations [^OptionsBuilder b [_ v]]
+  (.shouldDoGC b (boolean (:gc v (:gc option/defaults))))
+  (.syncIterations b (boolean (:synchronize v (:sync option/defaults)))))
 
-(defmethod arg-seq :iterations [[_ v]]
-  ["-gc" (str (boolean (:gc v (:gc option/defaults))))
-   "-si" (str (boolean (:synchronize v (:sync option/defaults))))])
+(defmethod build :measurement [^OptionsBuilder b [_ v]]
+  (when-let [x (:iterations v)]
+    (.measurementIterations b (int x)))
+  (when-let [x (:count v)]
+    (.measurementBatchSize b (int x)))
+  (when-let [x (:time v)]
+    (.measurementTime b (time-value x))))
 
-(defmethod arg-seq :mode [[_ v]]
-  (let [mode (fn [x]
-               (let [mode (util/check-valid "mode" util/mode? x)]
-                 (.shortLabel ^Mode mode)))]
-    ["-bm" (->> (util/keyword-seq v)
-                (map mode) (interpose \,)
-                (apply str))]))
+(defmethod build :mode [^OptionsBuilder b [_ v]]
+  (doseq [k (util/keyword-seq v)]
+    (.mode b (util/check-valid "mode" util/mode? k))))
 
-(defmethod arg-seq :ops-per-invocation [[_ v]]
-  ["-opi" (str v)])
+(defmethod build :ops-per-invocation [^OptionsBuilder b [_ v]]
+  (.operationsPerInvocation b (int v)))
 
-(defmethod arg-seq :output-time-unit [[_ v]]
-  ["-tu" (time-unit v)])
+(defmethod build :output-time-unit [^OptionsBuilder b [_ v]]
+  (.timeUnit b (time-unit v)))
 
-(defmethod arg-seq :profilers [[_ v]]
-  (mapcat (partial vector "-prof")
-          (if (string? v) [v] v)))
+(defmethod build :params [^OptionsBuilder b [_ v]]
+  (doseq [[k x] (:jmh/externs v)]
+    (.param b (name k) (str-array x))))
 
-(defmethod arg-seq :thread-groups [[_ v]]
-  ["-tg" (apply str (interpose \, v))])
+(defmethod build :profilers [^OptionsBuilder b [_ v]]
+  (doseq [x (if (string? v) [v] v)]
+    (let [[prof init] (if (coll? x) x [x ""])
+          prof (if (symbol? prof)
+                 (Class/forName (name prof))
+                 prof)]
+      (if (string? prof)
+        (.addProfiler b ^String prof init)
+        (.addProfiler b ^Class prof init)))))
 
-(defmethod arg-seq :threads [[_ v]]
-  ["-t" (str v)])
+(defmethod build :thread-groups [^OptionsBuilder b [_ v]]
+  (.threadGroups b (int-array (if (number? v) [v] v))))
 
-(defmethod arg-seq :timeout [[_ v]]
-  ["-to" (time-str v)])
+(defmethod build :threads [^OptionsBuilder b [_ v]]
+  (.threads b (int v)))
 
-(defmethod arg-seq :verbose [[_ v]]
-  ["-v" (str (util/check-valid "verbose mode" util/verbose-mode? v))])
+(defmethod build :timeout [^OptionsBuilder b [_ v]]
+  (.timeout b (time-value v)))
 
-(defmethod arg-seq :warmups [[_ v]]
-  (when-let [m (:mode v)]
-    ["-wm" (str (util/check-valid "warmup mode" util/warmup-mode? m))]))
+(defmethod build :verbose [^OptionsBuilder b [_ v]]
+  (.verbosity b (util/check-valid "verbose mode" util/verbose-mode? v)))
 
-(let [method
-      (fn [[i-arg bs-arg t-arg] [_ v]]
-        (-> (cat-arg [] v :iterations i-arg)
-            (cat-arg v :count bs-arg)
-            (cat-arg v :time t-arg time-str)))]
-  (doto ^clojure.lang.MultiFn arg-seq
-    (.addMethod :measurement (partial method ["-i" "-bs" "-r"]))
-    (.addMethod :warmup (partial method ["-wi" "-wbs" "-w"]))))
+(defmethod build :warmup [^OptionsBuilder b [_ v]]
+  (when-let [x (:iterations v)]
+    (.warmupIterations b (int x)))
+  (when-let [x (:count v)]
+    (.warmupBatchSize b (int x)))
+  (when-let [x (:time v)]
+    (.warmupTime b (time-value x))))
 
-(defmethod arg-seq ::default [_])
+(defmethod build :warmups [^OptionsBuilder b [_ v]]
+  (when-let [x (:mode v)]
+    (.warmupMode b (util/check-valid "warmup mode" util/warmup-mode? x))))
+
+(defmethod build ::default [_ _])

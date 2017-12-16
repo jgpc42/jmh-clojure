@@ -17,7 +17,7 @@
 (deftest ^:integration test-sample
   (let [extern "io.github.jgpc42.jmh.sample.Benchmarks"
         opts (assoc test/options
-                    :arguments ["-p" "amount=100"]
+                    :params {:jmh/externs {:amount 100}}
                     :externs [extern])
         result (core/run test/sample-env opts)]
 

@@ -39,9 +39,13 @@
                     ready to run an iteration before proceeding.
 
     :params         map. Parameters to add or override from env.
+                    Parameters for externs (see below) are provided via
+                    a special :jmh/externs key which gives a nested map.
 
     :profilers      a string or seq of strings. Profilers to enable
-                    while benchmarking. See `profilers`.
+                    while benchmarking. See `profilers`. External
+                    profilers may be specified by package-prefixed
+                    symbol or class object.
 
     :progress       callback fn that will receive periodic progress
                     events. Overridden by :status.
@@ -75,11 +79,9 @@
   External benchmark classes may be run along side Clojure ones. The
   :externs key gives a sequence of class names to process. Each item may
   be a class name, or a map, the latter gives a :class name along with
-  an optional :select method regex and a boolean :warmup flag.
-
-  Raw argument strings may be passed directly to jmh via the :arguments
-  key as a sequence of strings. This should generally only be used for
-  specifying parameters for external benchmarks."
+  an optional :select method regex and a boolean :warmup flag. Note that
+  the :select pattern is anchored to the beginning of the method name.
+  For example, to match methods ending with 'foo' use #\".*foo$\"."
   ([env] (run env {}))
   ([env opts]
    (let [go (comp result/parse exec/run gen/write env/setup)]

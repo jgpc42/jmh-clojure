@@ -3,20 +3,19 @@
             [clojure.test :refer :all])
   (:import [java.io PrintStream]))
 
-(deftest test-benchmark-arguments
+(deftest test-patterns
   (let [benchmarks '[{:class "_a_"}
                      {:class "_b_", :warmup true}]
         externs '[p.C
                   {:class p.D, :select #"\$bench$"}
-                  {:class p.E, :warmup true}]
-        wmb (str "(?:" "^\\Q_b_\\E\\..+" "|"
-                       "^\\Qp.E\\E\\..+" ")")]
-    (is (= ["-e" wmb
-            "-wmb" wmb
-            (str "(?:" "^\\Q_a_\\E\\..+"        "|"
-                       "^\\Qp.C\\E\\..+"        "|"
-                       "^\\Qp.D\\E\\.\\$bench$" ")")]
-           (exec/benchmark-arguments benchmarks externs)))))
+                  {:class p.E, :warmup true}]]
+    (is (= ["^\\Q_b_\\E\\..+"
+            "^\\Qp.E\\E\\..+"]
+           (exec/warmup-patterns benchmarks externs)))
+    (is (= ["^\\Q_a_\\E\\..+"
+            "^\\Qp.C\\E\\..+"
+            "^\\Qp.D\\E\\.\\$bench$"]
+           (exec/include-patterns benchmarks externs)))))
 
 (deftest test-progress-stream
   (let [events (atom [])
