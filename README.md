@@ -6,13 +6,13 @@
 [Leiningen][lein]
 
 ``` clojure
-[jmh-clojure "0.1.7"]
+[jmh-clojure "0.2.0"]
 ```
 
 [tools.deps.alpha][deps]
 
 ```clojure
-{jmh-clojure {:mvn/version "0.1.7"}}
+{jmh-clojure {:mvn/version "0.2.0"}}
 ```
 
 [Maven][maven]
@@ -21,7 +21,7 @@
 <dependency>
   <groupId>jmh-clojure</groupId>
   <artifactId>jmh-clojure</artifactId>
-  <version>0.1.7</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
@@ -57,7 +57,7 @@ As a simple example, let's say we want to benchmark our fn that gets the value a
 
 Benchmarks are described in data and are fully separated from definitions. The reason for this is twofold. First, decoupling is generally good design practice. And second, it allows us to easily take advantage of JMH process isolation (forking) for reliability and accurracy. More on this later.
 
-For repeatability, we'll place the following data in a `benchmarks.edn` resource file in our project. (Note that using a file is not a requirement, we could also specify the same data in Clojure. It would need to be quoted in that case, however.)
+For repeatability, we'll place the following data in a `benchmarks.edn` resource file in our project. (Note that using a file is not a requirement, we could also specify the same data in Clojure. The `:fn` key values would need to be quoted in that case, however.)
 
 ```clojure
 {:benchmarks
@@ -104,11 +104,11 @@ Notice how we have four results: one for each combination of parameter and bench
 
 Note that the above results were taken from multiple [runs][result], which is always a good practice when benchmarking.
 
-Benchmarking expressions or fns manually without the data specification is also supported. For example, the `run-expr` macro provides an interface similar to [criterium][criterium]. However, this forgoes JMH process isolation. For more on why benchmarking this way can be sub-optimal, see [here][extended].
+Benchmarking expressions or fns manually without the data specification is also supported. For example, the `run-expr` macro provides an interface similar to [criterium][criterium]. However, this forgoes JMH process isolation. For more on why benchmarking this way on the JVM can be sub-optimal, see [here][extended].
 
 ### More information
 
-As previously mentioned, please see the [sample file][sample] for the complete benchmark environment reference. For `run` options, see the [docs][run-doc]. Also, see the [wiki][wiki] for additional topics.
+As previously mentioned, please see the [sample file][sample] for the complete benchmark environment reference. For `run` options, see the [docs][run-doc]. Also, see the [wiki][wiki] for additional examples and topics.
 
 ### Running the tests
 

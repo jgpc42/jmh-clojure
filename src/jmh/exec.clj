@@ -71,7 +71,7 @@
         e))))
 
 (defn include-patterns
-  "Returns a include regex pattern strings."
+  "Returns a seq of include pattern strings."
   [benchmarks externs]
   (concat (->> (remove :warmup benchmarks)
                (map (comp re-class :class)))
@@ -80,7 +80,7 @@
             (re-class (:class x x) (:select x ".+")))))
 
 (defn warmup-patterns
-  "Returns a warmup include regex pattern strings."
+  "Returns a seq of warmup include pattern strings."
   [benchmarks externs]
   (concat (->> (filter :warmup benchmarks)
                (map (comp re-class :class)))
@@ -283,7 +283,7 @@
     (.param b (name k) (str-array x))))
 
 (defmethod build :profilers [^OptionsBuilder b [_ v]]
-  (util/check (coll? v) "expected seq of profilers")
+  (util/check (or (coll? v) (nil? v)) "expected seq of profilers")
   (doseq [x v]
     (let [[prof ^String init] (if (coll? x) x [x ""])
           prof (get @profiler-aliases prof prof)

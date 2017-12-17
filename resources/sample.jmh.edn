@@ -104,7 +104,7 @@
  ;; Time units may be specified as a short or long keyword. For example,
  ;; :ns, :nanoseconds; :us, :microseconds.
  {
-  :jmh/default {:mode :average}
+  :jmh/default {:mode :sample}
   :fast {:mode :single-shot}
   :stress {:mode :all}
 

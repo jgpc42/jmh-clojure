@@ -44,7 +44,7 @@
 
     :profilers      seq. Profilers to enable while benchmarking. See
                     `profilers`. External profilers may be specified by
-                    giving the class as package-prefixed symbol, class
+                    giving the class as package-prefixed symbol, Class
                     object, or tuple of [class initialization-string].
 
     :progress       callback fn that will receive periodic progress

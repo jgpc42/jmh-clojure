@@ -1,3 +1,8 @@
+## 0.2.0 (2017-12-17)
+
+* Support external profiler classes and profiler registry
+* BUGFIX: `:java` should be subkey of `:jvm` and not at top-level of `:fork` option
+
 ## 0.1.7 (2017-11-09)
 
 * Default `:fail-on-error` option to `true`
@@ -24,7 +29,7 @@
 
 ## 0.1.2 (2017-10-02)
 
-* BUGFIX: [#1](https://github.com/jgpc42/jmh-clojure/issues/1) NPE when no benchmarks are defined/selected
+* BUGFIX: [#1][issue1] NPE when no benchmarks are defined/selected
 
 ## 0.1.1 (2017-09-27)
 
@@ -32,4 +37,5 @@
 
 
 
+[issue1]:  https://github.com/jgpc42/jmh-clojure/issues/1
 [issue2]:  https://github.com/jgpc42/jmh-clojure/issues/2
