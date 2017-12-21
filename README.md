@@ -55,7 +55,7 @@ As a simple example, let's say we want to benchmark our fn that gets the value a
   #_...)
 ```
 
-Benchmarks are [usually](#Alternate-ways-to-run) described in data and are fully separated from definitions. The reason for this is twofold. First, decoupling is generally good design practice. And second, it allows us to easily take advantage of JMH process isolation (forking) for reliability and accurracy. More on this later.
+Benchmarks are [usually](#alternate-ways-to-run) described in data and are fully separated from definitions. The reason for this is twofold. First, decoupling is generally good design practice. And second, it allows us to easily take advantage of JMH process isolation (forking) for reliability and accurracy. More on this later.
 
 For repeatability, we'll place the following data in a `benchmarks.edn` resource file in our project. (Note that using a file is not a requirement, we could also specify the same data in Clojure. The `:fn` key values would need to be quoted in that case, however.)
 
