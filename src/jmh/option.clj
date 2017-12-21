@@ -20,11 +20,11 @@
   ignore-lock "jmh.ignoreLock")
 
 (def ^:dynamic *type-aliases*
-  "The option sets available for the :type shortcut. By
+  "The option sets available for the `jmh.core/run` :type option. By
   default, the following types are available:
 
-    :quick  1 fork, 5 warmup/measurement iterations.
-    :test   no forking, single-shot, 1 thread."
+    :quick    1 fork, 5 warmup/measurement iterations.
+    :test     no forking, single-shot, 1 thread."
   {:default {:fail-on-error true}
    :quick {:fail-on-error true
            :fork 1

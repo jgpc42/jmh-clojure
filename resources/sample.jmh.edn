@@ -1,8 +1,8 @@
-;; See the corresponding `jmh.sample` namespace for the example fns
-;; used in this file.
+;; See the corresponding `jmh.sample` namespace in this directory for
+;; the example fns used in this file.
 ;;
 ;; For more information on jmh benchmarking, please see the openjdk
-;; jmh-samples project.
+;; jmh-samples project at http://hg.openjdk.java.net/code-tools/jmh.
 
 {
  :benchmarks

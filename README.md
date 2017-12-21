@@ -31,13 +31,13 @@ Clojure versions 1.7 through 1.9 are currently supported.
 
 This library provides a data-oriented API to [JMH][jmh], the Java Microbenchmark Harness. It can be used directly or via Leiningen with [lein-jmh][lein-jmh].
 
-JMH is developed by OpenJDK JVM experts and goes to great lengths to ensure accurate benchmarks. Benchmarking on the JVM is a complex beast and, by extension, JMH takes some effort to learn and use properly. That being said, JMH is very robust and configurable. If you are new to JMH, I would recommend browsing the [sample][samples] code and javadocs before using this library.
+JMH is developed by OpenJDK JVM experts and goes to great lengths to ensure accurate benchmarks. Benchmarking on the JVM is a complex beast and, by extension, JMH takes a bit of effort to learn and use properly. That being said, JMH is very robust and configurable. If you are new to JMH, I would recommend browsing the [sample][samples] code and javadocs before using this library.
 
 If you a need simpler, less strenuous tool, I would suggest looking at the popular [criterium][criterium] library.
 
 ### Quick start
 
-As a simple example, let's say we want to benchmark our fn that gets the value at an arbitrary indexed type. Of course, the built in `nth` already does this. But we can't extend `nth` to existing types like `java.nio.ByteBuffer`, etc.
+As a simple example, let's say we want to benchmark our fn that gets the value at an arbitrary indexed type. Of course, the built in `nth` already does this, but we can't extend `nth` to existing types like `java.nio.ByteBuffer`, etc.
 
 ```clojure
 (ns demo.core)
@@ -55,7 +55,7 @@ As a simple example, let's say we want to benchmark our fn that gets the value a
   #_...)
 ```
 
-Benchmarks are described in data and are fully separated from definitions. The reason for this is twofold. First, decoupling is generally good design practice. And second, it allows us to easily take advantage of JMH process isolation (forking) for reliability and accurracy. More on this later.
+Benchmarks are [usually](#Alternate-ways-to-run) described in data and are fully separated from definitions. The reason for this is twofold. First, decoupling is generally good design practice. And second, it allows us to easily take advantage of JMH process isolation (forking) for reliability and accurracy. More on this later.
 
 For repeatability, we'll place the following data in a `benchmarks.edn` resource file in our project. (Note that using a file is not a requirement, we could also specify the same data in Clojure. The `:fn` key values would need to be quoted in that case, however.)
 
@@ -65,7 +65,7 @@ For repeatability, we'll place the following data in a `benchmarks.edn` resource
   {:name :vec, :fn demo.core/value-at, :args [:state/vector, :state/index]}]
 
  :states
- {:index {:fn (partial * 0.5), :args [:param/count]}
+ {:index {:fn (partial * 0.5), :args [:param/count]} ;; mid-point
   :string {:fn demo.utils/make-str, :args [:param/count]}
   :vector {:fn demo.utils/make-vec, :args [:param/count]}}
 
@@ -98,11 +98,13 @@ Now to run the benchmarks. We'll start a REPL in our project and evaluate the fo
 ;;     {:name :vec, :params {:count 100000}, :score [8.5783753539823E7 "ops/s"]})
 ```
 
-The `run` fn takes a benchmark environment and an optional map. We select the `:quick` type: an alias for some common JMH options. We override our default `:count` parameter sequence to measure our fn against small and large inputs. We also enable the gc profiler.
+The `run` fn takes a benchmark environment and an optional map. We select the `:quick` type: an [alias][alias-doc] for some common options. We override our default `:count` parameter sequence to measure our fn against small and large inputs. We also enable the gc profiler.
 
-Notice how we have four results: one for each combination of parameter and benchmark fn. For this example, we have omitted lots of additional result map data.
+Notice how we have four results: one for each combination of parameter and benchmark fn. For this example, we have omitted lots of additional result map data, including the [profiler][profilers] information.
 
 Note that the above results were taken from multiple [runs][result], which is always a good practice when benchmarking.
+
+#### Alternate ways to run
 
 Benchmarking expressions or fns manually without the data specification is also supported. For example, the `run-expr` macro provides an interface similar to [criterium][criterium]. However, this forgoes JMH process isolation. For more on why benchmarking this way on the JVM can be sub-optimal, see [here][extended].
 
@@ -126,6 +128,7 @@ Distributed under the Eclipse Public License, the same as Clojure.
 
 
 
+[alias-doc]:  https://jgpc42.github.io/jmh-clojure/doc/jmh.option.html#var-*type-aliases*
 [criterium]:  https://github.com/hugoduncan/criterium
 [deps]:       https://github.com/clojure/tools.deps.alpha
 [extended]:   https://github.com/jgpc42/jmh-clojure/wiki/Extended
@@ -133,6 +136,7 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [lein]:       http://github.com/technomancy/leiningen
 [lein-jmh]:   https://github.com/jgpc42/lein-jmh
 [maven]:      http://maven.apache.org
+[profilers]:  https://github.com/jgpc42/jmh-clojure/wiki/JMH-Profilers
 [result]:     https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-results-edn
 [run-doc]:    https://jgpc42.github.io/jmh-clojure/doc/jmh.core.html#var-run
 [sample]:     https://github.com/jgpc42/jmh-clojure/blob/master/resources/sample.jmh.edn
