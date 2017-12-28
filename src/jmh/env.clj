@@ -203,9 +203,14 @@
         substitute (partial replace (zipmap params gens))
         benchmarks (for [b benchmarks]
                      (update b :args substitute))
-        states (merge (:states env) pstates)]
+        states (merge (:states env) pstates)
 
-    (assoc env :benchmarks benchmarks, :states states)))
+        presolver (zipmap (map keyword gens) params)]
+
+    (assoc env
+           :benchmarks benchmarks
+           :states states
+           :jmh/param-resolver presolver)))
 
 (defn setup
   "Return the updated environment, suitable for generation."

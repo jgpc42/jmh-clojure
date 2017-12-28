@@ -89,7 +89,7 @@
             (re-class (:class x) (:select x ".+")))))
 
 (defn- run*
-  "Run the given command-line arguments and return the output."
+  "Run the given command-line arguments and return the result data."
   [benchmarks opts]
   (let [status (:jmh/status opts)
         log (cond
@@ -97,7 +97,6 @@
               (io/file status)
               (not status)
               (doto (File/createTempFile "jmh" ".txt") .deleteOnExit))
-        out (doto (File/createTempFile "jmh" ".xsv") .deleteOnExit)
 
         builder (OptionsBuilder.)]
 
@@ -113,13 +112,8 @@
     (when log
       (.output builder (str log)))
 
-    (doto builder
-      (.resultFormat ResultFormatType/CSV)
-      (.result (str out)))
-
     (try
       (.run (Runner. (.build builder)))
-      (slurp out)
       (catch NoBenchmarksException e
         (throw (RunnerException. "no benchmarks defined/selected.")))
       (catch RunnerException e
@@ -133,8 +127,7 @@
             (throw e))))
       (finally
         (when-not status
-          (.delete log))
-        (.delete out)))))
+          (.delete log))))))
 
 (defn line-output-stream
   "Return a stream that will invoke the supplied callback fn for each
@@ -192,7 +185,7 @@
     (PrintStream. (line-output-stream on-line))))
 
 (defn run
-  "Run and update the benchmark environment with the jmh output."
+  "Run and update the benchmark environment with the jmh results."
   [{benchmarks :jmh/benchmarks, opts :jmh/options :as env}]
   (let [ignore-orig (System/getProperty option/ignore-lock)
 
@@ -217,7 +210,7 @@
         (System/setOut out))
       (when (:ignore-lock opts)
         (System/setProperty option/ignore-lock "true"))
-      (assoc env :jmh/output (run* benchmarks opts))
+      (assoc env :jmh/result (run* benchmarks opts))
       (finally
         (when (not= out out-orig)
           (.flush ^PrintStream out)

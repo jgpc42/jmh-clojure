@@ -84,7 +84,7 @@
   For example, to match methods ending with 'foo' use #\".*foo$\"."
   ([env] (run env {}))
   ([env opts]
-   (let [go (comp result/parse exec/run gen/write env/setup)]
+   (let [go (comp result/transform exec/run gen/write env/setup)]
      (if (:instrument opts)
        (let [inst (instrument/env)]
          (instrument/with-instrumentation inst
