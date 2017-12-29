@@ -1,3 +1,9 @@
+## 0.2.1 (2017-12-29)
+
+* Include new benchmark result key `:score-confidence`
+* Include extra `:statistics` info for benchmark and profiler results when available
+* Show original parameter names for benchmark result `:args`, not the gensyms
+
 ## 0.2.0 (2017-12-17)
 
 * Support external profiler classes and profiler registry

@@ -105,7 +105,7 @@
      (first (run env (option/without-forking opts))))))
 
 (defmacro run-expr
-  "Benchmark an expression. Equivalent to: (run-fn (fn [] expr) opts)"
+  "Benchmark an expression. Equivalent to: (run-fn (fn [] expr) opts)."
   ([expr] `(run-expr ~expr {}))
   ([expr opts]
    `(run-fn (fn [] ~expr) ~opts)))
