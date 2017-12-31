@@ -26,8 +26,13 @@ public class DelegateClassLoader extends DynamicClassLoader {
 
         int i = name.lastIndexOf(".");
         String p = i > 0 ? name.substring(0, i) : null;
-        if (p != null && getPackage(p) == null)
-            definePackage(p, null, null, null, null, null, null, null);
+        if (p != null)
+            try {
+                definePackage(p, null, null, null, null, null, null, null);
+            }
+            catch (IllegalArgumentException e) {
+                /* ignored */
+            }
 
         return c;
     }
