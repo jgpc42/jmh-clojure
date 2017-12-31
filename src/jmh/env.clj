@@ -71,8 +71,9 @@
 (defn finalize-parameters
   "Return the normalized parameter map."
   [env]
-  (let [params (merge (:params env)
-                      (:params (:jmh/options env)))]
+  (let [option-params (dissoc (:params (:jmh/options env))
+                              :jmh/externs)
+        params (merge (:params env) option-params)]
     (reduce-kv
      (fn [m k x]
        (let [k (util/ns-keyword "param" k)
