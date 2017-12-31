@@ -25,7 +25,7 @@
 </dependency>
 ```
 
-Clojure versions 1.7 through 1.9 are currently supported.
+Java versions 1.6 to 1.9 and Clojure versions 1.7 to 1.9 are currently supported.
 
 ### What is it?
 
