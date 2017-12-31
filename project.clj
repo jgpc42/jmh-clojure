@@ -5,6 +5,13 @@
   (str "-Xbootclasspath:"
        (System/getProperty "sun.boot.class.path")))
 
+(def javac-options
+  (let [spec (-> (System/getProperty "java.specification.version")
+                 Double/valueOf)]
+    (if (<= spec 1.8)
+      ["-target" "1.6", "-source" "1.6", boot-classpath]
+      [])))
+
 (defproject jmh-clojure "0.2.2-SNAPSHOT"
   :description "Benchmarking with JMH, the Java Microbenchmark Harness, from Clojure."
   :url "https://github.com/jgpc42/jmh-clojure"
@@ -19,7 +26,7 @@
   :min-lein-version "2.0.0"
   :jar-exclusions [#".+\.java$"]
   :java-source-paths ["java"]
-  :javac-options ["-target" "1.6", "-source" "1.6" ~boot-classpath]
+  :javac-options ~javac-options
   :test-selectors {:unit (complement :integration)}
 
   :aliases {"test-all" ["do" "javac," "test,"
