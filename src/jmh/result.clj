@@ -52,7 +52,7 @@
              secs (reduce-kv
                    (fn [m ^String k v]
                      (if-let [[_ pct] (re-find #"\u00b7p([\d.]+)$" k)]
-                       (let [pct (Double/valueOf ^String pct)]
+                       (let [pct (* 100 (Double/valueOf ^String pct))]
                          (update m :percentiles assoc-sorted pct (edn v)))
                        (let [prof (if (.startsWith k "\u00b7")
                                     (subs k 1)
