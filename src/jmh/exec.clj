@@ -5,8 +5,6 @@
             [clojure.java.io :as io])
   (:import [java.io ByteArrayOutputStream File OutputStream PrintStream]
            [java.lang.management ManagementFactory]
-           [org.openjdk.jmh.annotations Mode]
-           [org.openjdk.jmh.results.format ResultFormatType]
            [org.openjdk.jmh.runner BenchmarkException NoBenchmarksException Runner RunnerException]
            [org.openjdk.jmh.runner.options OptionsBuilder TimeValue]))
 
