@@ -1,4 +1,5 @@
 dist: trusty
+sudo: false
 
 language: clojure
 
@@ -8,6 +9,5 @@ jdk:
   - openjdk6
   - openjdk7
   - openjdk8
-  - oraclejdk7
-  - oraclejdk8
   - oraclejdk9
+  - oraclejdk10
