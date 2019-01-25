@@ -18,7 +18,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[insn "0.1.4"]
+  :dependencies [[insn "0.4.0"]
                  [org.clojure/clojure "1.8.0"]
                  [org.openjdk.jmh/jmh-core ~(:jmh version)]
                  [org.openjdk.jmh/jmh-generator-reflection ~(:jmh version)]]
