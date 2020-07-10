@@ -1,7 +1,9 @@
 [![Clojars Project](https://img.shields.io/clojars/v/jmh-clojure.svg)](https://clojars.org/jmh-clojure)
 [![Travis CI](https://travis-ci.org/jgpc42/jmh-clojure.svg?branch=master)](https://travis-ci.org/jgpc42/jmh-clojure)
 
-### Dependency information
+### Dependency and version information
+<details>
+  <summary>Click to show</summary>
 
 [Leiningen][lein]
 
@@ -25,7 +27,8 @@
 </dependency>
 ```
 
-Java versions 8 to 11 and Clojure versions 1.7 to 1.10 are currently supported.
+JDK versions 8 to 14 and Clojure versions 1.7 to 1.10 are currently [supported][ci].
+</details>
 
 ### What is it?
 
@@ -129,6 +132,7 @@ Distributed under the Eclipse Public License, the same as Clojure.
 
 
 [alias-doc]:  https://jgpc42.github.io/jmh-clojure/doc/jmh.option.html#var-*type-aliases*
+[ci]:         https://jgpc42.github.io/jmh-clojure/.github/workflows/test.yml
 [criterium]:  https://github.com/hugoduncan/criterium
 [deps]:       https://github.com/clojure/tools.deps.alpha
 [extended]:   https://github.com/jgpc42/jmh-clojure/wiki/Extended
