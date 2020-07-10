@@ -132,7 +132,7 @@ Distributed under the Eclipse Public License, the same as Clojure.
 
 
 [alias-doc]:  https://jgpc42.github.io/jmh-clojure/doc/jmh.option.html#var-*type-aliases*
-[ci]:         https://jgpc42.github.io/jmh-clojure/.github/workflows/test.yml
+[ci]:         https://github.com/jgpc42/jmh-clojure/blob/master/.github/workflows/test.yml
 [criterium]:  https://github.com/hugoduncan/criterium
 [deps]:       https://github.com/clojure/tools.deps.alpha
 [extended]:   https://github.com/jgpc42/jmh-clojure/wiki/Extended
