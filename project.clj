@@ -1,5 +1,5 @@
 (def version
-  {:jmh "1.19"})
+  {:jmh "1.23"})
 
 (def boot-classpath
   (str "-Xbootclasspath:"
