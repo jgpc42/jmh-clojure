@@ -116,6 +116,10 @@
   "Return a set of profiler maps. If :supported, the profiler :name is
   available for use with `run`."
   []
+  (util/warn "`jmh.core/profilers` uses `ProfilerFactory/listProfilers`, provided by JMH."
+             "This static method will shell out to `sudo` interactively on most platforms."
+             "This bug is due to be fixed in the next JMH version (1.24, as of 2020-07-11)."
+             "See: http://hg.openjdk.java.net/code-tools/jmh/rev/4a420afe8a9e")
   (let [bas (ByteArrayOutputStream. 4096)
         _ (doto (PrintStream. bas)
             ProfilerFactory/listProfilers)
