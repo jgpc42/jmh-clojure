@@ -1,5 +1,5 @@
 [![Clojars Project](https://img.shields.io/clojars/v/jmh-clojure.svg)](https://clojars.org/jmh-clojure)
-![](https://github.com/jgpc42/jmh-clojure/workflows/Test%20runner/badge.svg)
+[![](https://github.com/jgpc42/jmh-clojure/workflows/Test%20runner/badge.svg)][ci]
 
 ### Dependency and version information
 <details>
@@ -109,7 +109,7 @@ Note that the above results were taken from multiple [runs][result], which is al
 
 #### Alternate ways to run
 
-Benchmarking expressions or fns manually without the data specification is also supported. For example, the `run-expr` macro provides an interface similar to [criterium][criterium]. However, this forgoes JMH process isolation. For more on why benchmarking this way on the JVM can be sub-optimal, see [here][extended].
+Benchmarking expressions or fns manually without the data specification is also supported. For example, the `run-expr` macro provides an interface similar to criterium, and allows benchmarking of code that only resides in memory (that you are updating in a REPL, for example), rather than on disk (loadable via `require`). However, this forgoes JMH process isolation. For more on why benchmarking this way on the JVM can be sub-optimal, see [here][extended].
 
 ### More information
 
