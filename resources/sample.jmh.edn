@@ -146,6 +146,12 @@
   ;; evaluates to a fn can be given.
   ;;
   ;; If a symbol does not have a namespace, 'clojure.core' is assumed.
+  ;;
+  ;; Generally, using fn expressions instead of var symbols should be
+  ;; avoided for all but the most simple use cases. Please see:
+  ;; https://github.com/jgpc42/jmh-clojure/wiki/Fn-Expressions
+  ;;
+  ;; Also note that edn does not support reader macros like '#(...)'.
   :random-nums jmh.sample/random-nums
   :random-num (fn [] (rand-int Integer/MAX_VALUE))
 
