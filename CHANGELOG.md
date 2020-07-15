@@ -1,3 +1,8 @@
+## 0.3.0 (2020-07-14)
+
+* Upgrade JMH to latest version `1.23`
+* Add a `deps.edn` file
+
 ## 0.2.1 (2017-12-29)
 
 * Include new benchmark result key `:score-confidence`

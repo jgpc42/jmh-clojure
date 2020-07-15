@@ -12,7 +12,7 @@
       ["-target" "1.6", "-source" "1.6", boot-classpath]
       [])))
 
-(defproject jmh-clojure "0.2.2-SNAPSHOT"
+(defproject jmh-clojure "0.3.0"
   :description "Benchmarking with JMH, the Java Microbenchmark Harness, from Clojure."
   :url "https://github.com/jgpc42/jmh-clojure"
   :license {:name "Eclipse Public License"
