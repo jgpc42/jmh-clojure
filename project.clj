@@ -3,16 +3,19 @@
 
 (def boot-classpath
   (str "-Xbootclasspath:"
-       (System/getProperty "sun.boot.class.path")))
+       (or (some-> (System/getenv "JAVA_8_HOME")
+                   (java.io.File. "jre/lib/rt.jar")
+                   .getCanonicalPath)
+           (System/getProperty "sun.boot.class.path"))))
 
 (def javac-options
   (let [spec (-> (System/getProperty "java.specification.version")
                  Double/valueOf)]
-    (if (<= spec 1.8)
-      ["-target" "1.6", "-source" "1.6", boot-classpath]
-      [])))
+    (if (= spec 1.8)
+      []
+      ["-target" "1.8", "-source" "1.8", boot-classpath])))
 
-(defproject jmh-clojure "0.3.0"
+(defproject jmh-clojure "0.3.1-SNAPSHOT"
   :description "Benchmarking with JMH, the Java Microbenchmark Harness, from Clojure."
   :url "https://github.com/jgpc42/jmh-clojure"
   :license {:name "Eclipse Public License"
