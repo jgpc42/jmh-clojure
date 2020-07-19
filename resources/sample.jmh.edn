@@ -114,7 +114,7 @@
    :mode :average          ;; Defaults to :throughput. May also be a sequence, or :all.
    :ops-per-invocation 10  ;; The amount of logical "operations" per call.
    :output-time-unit :sec  ;; Report results using the following time unit.
-   :threads 3              ;; Worker threads. Defaults to the available processors.
+   :threads 3              ;; Worker threads to use.
    :timeout [500 :ms]      ;; Interrupt the worker thread if the run exceeds this maximum.
 
    :fork        ;; Give a number instead of a map to specify only the :count.

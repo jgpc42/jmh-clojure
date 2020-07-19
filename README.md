@@ -8,13 +8,13 @@
 [Leiningen][lein]
 
 ``` clojure
-[jmh-clojure "0.3.0"]
+[jmh-clojure "0.3.1"]
 ```
 
 [tools.deps][deps]
 
 ```clojure
-{jmh-clojure {:mvn/version "0.3.0"}}
+{jmh-clojure {:mvn/version "0.3.1"}}
 ```
 
 [Maven][maven]
@@ -23,7 +23,7 @@
 <dependency>
   <groupId>jmh-clojure</groupId>
   <artifactId>jmh-clojure</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
 </dependency>
 ```
 

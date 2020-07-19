@@ -1,3 +1,7 @@
+## 0.3.1 (2020-07-19)
+
+* BUGFIX: compile Java code for advertized baseline JDK 8 compatibility
+
 ## 0.3.0 (2020-07-14)
 
 * Upgrade JMH to latest version `1.23`
