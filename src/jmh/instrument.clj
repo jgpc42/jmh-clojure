@@ -213,7 +213,7 @@
     (intern-fn (util/eval-fn form) x))
   Symbol
   (intern-fn [s x]
-    (let [v (util/check (resolve s)
+    (let [v (util/check (or (resolve s) (util/require-fn s))
                         (str "symbol did not resolve: " s))]
       (intern-fn v x)))
   Var
