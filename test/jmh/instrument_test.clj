@@ -26,6 +26,24 @@
     (is (= '[String long]
            (->> log :quux second :arglist (map (comp :tag meta)))))))
 
+(defn jjj ^long [^long a, ^long b] (unchecked-add a b))
+(defn jojoj ^long [o1, ^long a, o2, ^long b] (unchecked-add a b))
+(defn jjojo ^long [^long a, o1, ^long b, o2] (unchecked-add a b))
+
+(deftest test-intern-prim-loads
+  (let [env (inst/env)]
+    (inst/with-instrumentation env
+      (let [v1 (inst/intern-fn #'jjj :jjj)
+            v2 (inst/intern-fn #'jojoj :jojoj)
+            v3 (inst/intern-fn #'jjojo :jjojo)]
+        (.invokePrim @v1 1 2)
+        (.invokePrim @v2 {} 1 {} 2)
+        (.invokePrim @v3 1 {} 2 {})))
+    (is (= {:jjj   [{:ret 3, :args [1 2], :arglist '[a b]}]
+            :jojoj [{:ret 3, :args [{} 1 {} 2], :arglist '[o1 a o2 b]}]
+            :jjojo [{:ret 3, :args [1 {} 2 {}], :arglist '[a o1 b o2]}]}
+           (inst/log env)))))
+
 (deftest ^:integration test-sample
   (let [opts (assoc test/options :instrument true)
         result (core/run test/sample-env opts)

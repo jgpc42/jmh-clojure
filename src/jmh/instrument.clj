@@ -135,13 +135,15 @@
                  [:invokestatic Long "valueOf" [:long Long]]
                  [:invokestatic RT "get" [Object Object Object]]]
 
-        load-local (fn [i t]
-                     (condp = t
-                       :long [[:lload i]
-                              [:invokestatic Long "valueOf" [:long Long]]]
-                       :double [[:dload i]
-                                [:invokestatic Double "valueOf" [:double Double]]]
-                       [:aload i]))
+        load-locals (fn [[loads i] t]
+                      (let [inext (+ i (if (#{:long :double} t) 2 1))
+                            load (condp = t
+                                   :long [[:lload i]
+                                          [:invokestatic Long "valueOf" [:long Long]]]
+                                   :double [[:dload i]
+                                            [:invokestatic Double "valueOf" [:double Double]]]
+                                   [:aload i])]
+                        [(conj loads load) inext]))
 
         return (condp = (last desc)
                  :long [[:invokestatic RT "longCast" [Object :long]]
@@ -150,7 +152,7 @@
                           [:dreturn]]
                  [:areturn])]
     [prelude
-     (map load-local (next (range)) (butlast desc))
+     (first (reduce load-locals [[], 1] (butlast desc)))
      [:invokeinterface IFn "invoke" (repeat (inc (count desc)) Object)]
      return]))
 
