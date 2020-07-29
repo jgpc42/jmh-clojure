@@ -2,6 +2,8 @@
 .dir-locals.el
 .lein-*
 .nrepl-*
+generate-docs.sh
 pom.xml.asc
 test-aot.sh
+wiki/
 target/

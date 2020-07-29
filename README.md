@@ -115,6 +115,8 @@ Benchmarking expressions or fns manually without the data specification is also 
 
 As previously mentioned, please see the [sample file][sample] for the complete benchmark environment reference. For `run` options, see the [docs][run-doc]. Also, see the [wiki][wiki] for additional examples and topics.
 
+The materials for a talk I gave at a [London Clojurians][london] online meetup are also available [here][talk]. A video of the event is also [available][video].
+
 ### Running the tests
 
 ```bash
@@ -139,11 +141,14 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [jmh]:        http://openjdk.java.net/projects/code-tools/jmh/
 [lein]:       http://github.com/technomancy/leiningen
 [lein-jmh]:   https://github.com/jgpc42/lein-jmh
+[london]:     https://www.meetup.com/London-Clojurians/
 [maven]:      http://maven.apache.org
 [profilers]:  https://github.com/jgpc42/jmh-clojure/wiki/JMH-Profilers
 [result]:     https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-results-edn
 [run-doc]:    https://jgpc42.github.io/jmh-clojure/doc/jmh.core.html#var-run
 [sample]:     https://github.com/jgpc42/jmh-clojure/blob/master/resources/sample.jmh.edn
 [samples]:    http://hg.openjdk.java.net/code-tools/jmh/file/1ddf31f810a3/jmh-samples/src/main/java/org/openjdk/jmh/samples/
+[talk]:       https://github.com/jgpc42/london-clojurians-jmh-talk-2020
 [utils]:      https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-utils-clj
+[video]:      https://www.youtube.com/watch?v=_6qVfFkBdWI
 [wiki]:       https://github.com/jgpc42/jmh-clojure/wiki
