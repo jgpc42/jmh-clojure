@@ -115,7 +115,7 @@ Benchmarking expressions or fns manually without the data specification is also 
 
 As previously mentioned, please see the [sample file][sample] for the complete benchmark environment reference. For `run` options, see the [docs][run-doc]. Also, see the [wiki][wiki] for additional examples and topics.
 
-The materials for a talk I gave at a [London Clojurians][london] online meetup are also available [here][talk]. A video of the event is also [available][video].
+The materials for a talk I gave at a [London Clojurians][london] online meetup are also available [here][talk]. A video capture of the event can also be viewed on [YouTube][video].
 
 ### Running the tests
 
