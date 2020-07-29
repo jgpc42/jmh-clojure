@@ -2,7 +2,6 @@
   (:require [jmh.instrument :as inst]
             [jmh.core :as core]
             [jmh.test-util :as test]
-            [demo.core :as demo]
             [clojure.test :refer :all]))
 
 (deftest test-intern-fn
@@ -10,7 +9,7 @@
         _ (inst/with-instrumentation env
             (let [v1 (inst/intern-fn (fn [a b] (+ a b)) :foo)
                   v2 (inst/intern-fn (fn [x] (assert false "bar")) :bar)
-                  v3 (inst/intern-fn #'demo/index :quux)]
+                  v3 (inst/intern-fn 'demo.core/index :quux)]
               (is (= 59 (v1 42 17)))
               (is (thrown-with-msg? AssertionError #"bar\nfalse$" (v2 :x)))
               (is (= \q (v3 "quux" 0)))
