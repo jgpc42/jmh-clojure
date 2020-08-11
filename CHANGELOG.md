@@ -1,3 +1,10 @@
+## 0.4.0 (2020-XX-XX)
+
+* Downgrade `insn` to `0.2.1` to avoid classpath collisions with (many popular) libraries that use older `ASM` versions
+* BIGFIX: emit all selected benchmarks to single class to enable JMH `:group` functionality (*in progress*)
+* BUGFIX: improper single-width prim loads with `:instrument` option
+* BUGFIX: option normalization should be done once at the end when all maps are merged
+
 ## 0.3.1 (2020-07-19)
 
 * BUGFIX: compile Java code for advertized baseline JDK 8 compatibility
