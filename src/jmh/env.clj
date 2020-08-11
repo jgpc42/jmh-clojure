@@ -16,10 +16,9 @@
                  (get option-selectors (keyword (name x)))
                  x))
         maps (->> (concat (cons defaults maps) [opts])
-                  (remove nil?)
-                  (map option/normalize))
+                  (remove nil?))
         merge-maps #(if (map? %) (merge % %2) %2)]
-    (apply merge-with merge-maps maps)))
+    (option/normalize (apply merge-with merge-maps maps))))
 
 (defn filter-by-selectors
   "Given the keyword `sels` and predicate map `selectors`, filter by any
