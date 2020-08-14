@@ -13,7 +13,7 @@
   defaults
   {:gc Defaults/DO_GC
    :forks Defaults/MEASUREMENT_FORKS
-   :sync Defaults/SYNC_ITERATIONS})
+   :synchronize Defaults/SYNC_ITERATIONS})
 
 (def ^{:internal true, :no-doc true
        :doc "Property definition to ignore lock file errors."}
@@ -44,9 +44,10 @@
       (#{"" "true" "1"} (System/getProperty debug))))
 
 (defn ^:internal ^:no-doc normalize
-  "Return the options map with shortcuts expanded."
+  "Return the options map with defaults added and shortcuts expanded."
   [m]
-  (let [expand (fn [m root val-key]
+  (let [m (merge {:fail-on-error true} m)
+        expand (fn [m root val-key]
                  (let [x (get m root)]
                    (if (or (nil? x) (map? x))
                      m

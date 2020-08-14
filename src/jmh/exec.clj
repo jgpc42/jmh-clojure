@@ -23,11 +23,9 @@
   (str "\\Q" s "\\E"))
 
 (defn re-class
-  "Return a pattern that will match the class, or if the second argument
-  is provided, members of the class."
-  ([cname] (re-class cname ".+"))
-  ([cname members-pattern]
-   (str "^" (re-escape cname) "\\." members-pattern)))
+  "Return a pattern that will match members of the given class."
+  [cname members-pattern]
+  (str "^" (re-escape cname) "\\." members-pattern))
 
 (defn forked-with-arguments?
   "Return true if the benchmark will run forked with new JVM arguments."
@@ -70,21 +68,18 @@
 
 (defn include-patterns
   "Returns a seq of include pattern strings."
-  [benchmarks externs]
-  (concat (->> (remove :warmup benchmarks)
-               (map (comp re-class :class)))
-          (for [x externs
-                :when (not (:warmup x))]
-            (re-class (:class x x) (:select x ".+")))))
-
-(defn warmup-patterns
-  "Returns a seq of warmup include pattern strings."
-  [benchmarks externs]
-  (concat (->> (filter :warmup benchmarks)
-               (map (comp re-class :class)))
-          (for [x externs
-                :when (:warmup x)]
-            (re-class (:class x) (:select x ".+")))))
+  ([benchmarks externs]
+   (include-patterns benchmarks externs false))
+  ([benchmarks externs warmup?]
+   (distinct
+    (concat (for [b benchmarks
+                  :when (= warmup? (boolean (:warmup b)))]
+              (if-let [g (-> b :options :group)]
+                (re-class (:class b) (str (munge (name g)) "$"))
+                (re-class (:class b) (str (:method b) "$"))))
+            (for [x externs
+                  :when (= warmup? (boolean (:warmup x)))]
+              (re-class (:class x x) (:select x ".+")))))))
 
 (defn- run*
   "Run the given command-line arguments and return the result data."
@@ -101,7 +96,7 @@
     (doseq [entry opts]
       (build builder entry))
 
-    (doseq [re (warmup-patterns benchmarks (:externs opts))]
+    (doseq [re (include-patterns benchmarks (:externs opts) true)]
       (.exclude builder re)
       (.includeWarmup builder re))
     (doseq [re (include-patterns benchmarks (:externs opts))]
@@ -235,7 +230,8 @@
   (.shouldFailOnError b (boolean v)))
 
 (defmethod build :fork [^OptionsBuilder b [_ v]]
-  (.forks b (int (:count v (:forks option/defaults))))
+  (when-let [x (:count v)]
+    (.forks b (int x)))
   (when-let [x (:warmups v)]
     (.warmupForks b (int x)))
   (when-let [x (get-in v [:jvm :java])]
@@ -249,7 +245,7 @@
 
 (defmethod build :iterations [^OptionsBuilder b [_ v]]
   (.shouldDoGC b (boolean (:gc v (:gc option/defaults))))
-  (.syncIterations b (boolean (:synchronize v (:sync option/defaults)))))
+  (.syncIterations b (boolean (:synchronize v (:synchronize option/defaults)))))
 
 (defmethod build :measurement [^OptionsBuilder b [_ v]]
   (when-let [x (:iterations v)]

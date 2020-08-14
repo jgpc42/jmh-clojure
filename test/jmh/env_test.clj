@@ -7,12 +7,13 @@
   (let [xs [{:a 42} :x]
         selectors {:x {:b 2}, :jmh/default {:a 2, :c 3}}
         opts {:a 1, :d 4}]
-    (is (= {:a 1, :b 2, :c 3, :d 4}
+    (is (= {:fail-on-error true, :a 1, :b 2, :c 3, :d 4}
            (env/merge-options xs selectors opts)))
-    (is (= {:group "g", :fork {:count 1}, :group-threads 3, :mode :average}
+    (is (= {:fail-on-error true, :group :g, :fork {:count 1},
+            :group-threads 3, :mode :average}
            (env/merge-options
             [:g {:threads 3}]
-            {:g {:group "g" :threads 1}, :jmh/default {:fork 2 :mode :average}}
+            {:g {:group :g :threads 1}, :jmh/default {:fork 2 :mode :average}}
             {:fork 1})))))
 
 (deftest test-filter-by-selectors

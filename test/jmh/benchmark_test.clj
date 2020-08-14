@@ -1,7 +1,8 @@
 (ns jmh.benchmark-test
   (:require [clojure.test :refer :all]
             [demo.core :as demo]
-            [jmh.benchmark :as bench])
+            [jmh.benchmark :as bench]
+            [clojure.pprint :refer [pprint] :rename {pprint pp}])
   (:import [clojure.lang IFn IFn$OLO]
            [io.github.jgpc42.jmh Util]))
 
@@ -41,10 +42,6 @@
                                  :args [:seq]
                                  :apply true})))))
 
-(deftest test-class-fields
-  (is (= 2 (count (bench/class-fields
-                   {:fn 'f, :apply true, :type Object})))))
-
 (deftest test-method-emits
   (let [b {:fn `demo/index, :args [:seq], :apply true}
         info (bench/fn-field-info b)
@@ -59,3 +56,12 @@
            :jmh/resolver {:state/i "i", :state/foo 'pkg.Foo}}]
     (is (= ['pkg.Foo "i" Object]
            (bench/method-desc b)))))
+
+(deftest test-class-type-of
+  (let [benchmarks [{:fn 'f, :apply true, :type Object, :index 0, :method "x" :return :long}
+                    {:fn 'g, :type Object, :index 1, :method "y" :return `Object}]
+        {:keys [fields methods] :as t} (bench/class-type-of "foo" benchmarks)]
+    #_(pp methods)
+    (is (= "foo" (:name t)))
+    (is (= 3 (count fields)))
+    (is (= 3 (count methods)))))

@@ -136,7 +136,7 @@
                  [:invokestatic RT "get" [Object Object Object]]]
 
         load-locals (fn [[loads i] t]
-                      (let [inext (+ i (if (#{:long :double} t) 2 1))
+                      (let [inext (+ (long i) (long (if (#{:long :double} t) 2 1)))
                             load (condp = t
                                    :long [[:lload i]
                                           [:invokestatic Long "valueOf" [:long Long]]]

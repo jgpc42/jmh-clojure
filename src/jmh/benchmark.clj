@@ -15,8 +15,6 @@
   {:flags [:private :static :final]
    :name "_apply", :type IFn})
 
-(def fn-field-name "_fn")
-
 (defmulti ^:private ann-tuple
   "Return an annotation tuple from the given map entry."
   first :default ::default)
@@ -110,14 +108,14 @@
 
 ;;;
 
-(defn class-fields
-  "Return a seq of static field data."
+(defn fn-field-name [b]
+  (str "_" (:index b) "_fn"))
+
+(defn class-field
+  "Return static field data for the given benchmark."
   [{ftype :type :as b}]
-  (let [fields [{:flags [:private :static :final]
-                  :name fn-field-name, :type ftype}]]
-    (if (:apply b)
-      (conj fields apply-field)
-      fields)))
+  {:flags [:private :static :final]
+   :name (fn-field-name b) :type ftype})
 
 (defn method-emits
   "Return a map of bytecode snippets for later assembly."
@@ -137,7 +135,7 @@
 
         prelude [(when apply?
                    [:getstatic :this (:name apply-field) IFn])
-                 [:getstatic :this fn-field-name ftype]]]
+                 [:getstatic :this (fn-field-name b) ftype]]]
 
     {:invoke invoke, :prelude prelude, :return return}))
 
@@ -185,27 +183,31 @@
      (instrument/load-fn f metric)
      (when (not= IFn ftype)
        [:checkcast ftype])
-     [:putstatic :this fn-field-name ftype]]))
+     [:putstatic :this (fn-field-name b) ftype]]))
 
-(defn class-type
-  "Yield the proxy class data of the given benchmark."
-  [b]
-  (let [anns (cons [Benchmark true]
-                   (keep ann-tuple (:options b)))
+(defn class-method [b]
+  (let [desc (method-desc b)
+        anns (cons [Benchmark true]
+                   (keep ann-tuple (:options b)))]
+    {:flags [:public :final], :name (:method b)
+     :desc desc, :annotations anns
+     :emit (method-body b)}))
 
-        clinit {:name :clinit
-                :emit [(fn-load b)
-                       [:return]]}
-
-        desc (method-desc b)
-
-        run {:flags [:public :final], :name "run"
-             :desc desc, :annotations anns
-             :emit (method-body b)}]
+(defn class-type-of
+  "Yields the class data for a class of the provided name containing the
+  given benchmark methods."
+  [class-name benchmarks]
+  (let [fields (concat (map class-field benchmarks)
+                       (when (some :apply benchmarks)
+                         [apply-field]))
+        methods (cons {:name :clinit
+                       :emit [(mapcat fn-load benchmarks)
+                              [:return]]}
+                      (map class-method benchmarks))]
     {:flags [:public]
-     :name (:class b)
-     :fields (class-fields b)
-     :methods [clinit run]}))
+     :name class-name
+     :fields fields
+     :methods methods}))
 
 ;;;
 
@@ -222,7 +224,7 @@
          :jvmArgsAppend (get-in v [:jvm :append-args]))])
 
 (defmethod ann-tuple :group [[_ v]]
-  [Group v])
+  [Group (munge (name v))])
 
 (defmethod ann-tuple :group-threads [[_ v]]
   [GroupThreads (int v)])

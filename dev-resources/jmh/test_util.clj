@@ -4,12 +4,10 @@
 
 (def options
   {:clear-locals true
-   :fail-on-error true
    :fork 0
    :measurement {:count 1, :iterations 2}
    :mode :single-shot
    :progress false
-   :threads 1
    :warnings false})
 
 (defn env-file [fname]

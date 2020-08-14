@@ -125,10 +125,12 @@
 
 (defn- class-name
   "Return a package-prefixed class name."
-  [pkg prefix ^String s]
-  (util/check (neg? (.indexOf s "$"))
-              (str "jmh class names cannot contain the '$' character: " s))
-  (str pkg "." prefix "_" (munge s)))
+  ([pkg ^String s]
+   (util/check (neg? (.indexOf s "$"))
+               (str "jmh class names cannot contain the '$' character: " s))
+   (str pkg "." (munge s)))
+  ([pkg prefix s]
+   (class-name pkg (str prefix "_" s))))
 
 (defn state-resolver
   "Returns a map with state-prefixed keywords to states."
@@ -174,11 +176,11 @@
 
         finalize
         (fn [idx b]
-          (let [prefix (str "bench_" idx)
-                cname (name (:name b (:fn b)))
-                cname (class-name (:jmh/pkg env) prefix cname)
+          (let [prefix (format "_%03d" idx)
+                meth (str prefix "_" (munge (name (:name b (:fn b)))))
                 merged (merge-options (:options b) opt-selectors opts)]
-            (assoc b :class cname, :index idx, :options merged
+            (assoc b :class (:jmh/benchmark-class env)
+                   :method meth, :index idx, :options merged
                    :jmh/resolver resolver)))]
 
     (->> (:benchmarks env)
@@ -215,8 +217,8 @@
 (defn setup
   "Return the updated environment, suitable for generation."
   [env opts]
-  (let [opts (-> (option/normalize opts)
-                 option/without-type-alias)
+  (let [opts (-> (option/without-type-alias opts (:options env))
+                 option/normalize)
         opts (if (:instrument opts)
                (option/without-forking opts)
                opts)
@@ -224,9 +226,13 @@
                (option/without-locking opts)
                opts)
 
-        pkg (str "jmh" (System/currentTimeMillis))
+        pkg (str "jmh_" (System/currentTimeMillis))
         path (or (:compile-path opts) *compile-path* "classes")
-        env (assoc env :jmh/pkg pkg, :jmh/path path
+        cname (class-name pkg "bench")
+        env (assoc env
+                   :jmh/pkg pkg
+                   :jmh/path path
+                   :jmh/benchmark-class cname
                    :jmh/options opts
                    :jmh/option-selectors (:options env))
 
@@ -237,7 +243,7 @@
               (assoc env :jmh/externs (external-classes env))
               (assoc env :jmh/states (finalize-states env)))
 
-        types (concat (map benchmark/class-type (:jmh/benchmarks env))
+        types (concat [(benchmark/class-type-of cname (:jmh/benchmarks env))]
                       (map state/class-type (:jmh/states env)))]
 
     (when (option/debug? opts)

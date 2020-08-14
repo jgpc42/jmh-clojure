@@ -4,17 +4,17 @@
   (:import [java.io PrintStream]))
 
 (deftest test-patterns
-  (let [benchmarks '[{:class "_a_"}
-                     {:class "_b_", :warmup true}]
-        externs '[p.C
-                  {:class p.D, :select #"\$bench$"}
-                  {:class p.E, :warmup true}]]
-    (is (= ["^\\Q_b_\\E\\..+"
-            "^\\Qp.E\\E\\..+"]
-           (exec/warmup-patterns benchmarks externs)))
-    (is (= ["^\\Q_a_\\E\\..+"
-            "^\\Qp.C\\E\\..+"
-            "^\\Qp.D\\E\\.\\$bench$"]
+  (let [benchmarks '[{:class ":a:", :method "!x!"}
+                     {:class ":b:", :method "!y!", :warmup true}]
+        externs '[p.C1
+                  {:class p.C2, :select #"\$foo$"}
+                  {:class p.C3, :warmup true}]]
+    (is (= ["^\\Q:b:\\E\\.!y!$"
+            "^\\Qp.C3\\E\\..+"]
+           (exec/include-patterns benchmarks externs true)))
+    (is (= ["^\\Q:a:\\E\\.!x!$"
+            "^\\Qp.C1\\E\\..+"
+            "^\\Qp.C2\\E\\.\\$foo$"]
            (exec/include-patterns benchmarks externs)))))
 
 (deftest test-progress-stream
