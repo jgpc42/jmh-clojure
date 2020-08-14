@@ -1,7 +1,9 @@
 ## 0.4.0 (2020-XX-XX)
 
 * Downgrade `insn` to `0.2.1` to avoid classpath collisions with (many popular) libraries that use older `ASM` versions
-* BIGFIX: emit all selected benchmarks to single class to enable JMH `:group` functionality (*in progress*)
+* Upgrade JMH to latest version `1.24`
+* Rename `:profilers` result key to the more accurate `:secondary`
+* BUGFIX: emit all selected benchmarks to single class to enable JMH `:group` functionality (*in progress*)
 * BUGFIX: improper single-width prim loads with `:instrument` option
 * BUGFIX: option normalization should be done once at the end when all maps are merged
 

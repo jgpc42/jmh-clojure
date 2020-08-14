@@ -1,5 +1,7 @@
-(def version
-  {:jmh "1.23"})
+(def dependencies
+  (->> "deps.edn" slurp read-string
+       :deps (mapv #(vector (% 0) (:mvn/version (% 1))))
+       (into '[[org.clojure/clojure "1.8.0"]])))
 
 (def javac-options
   (let [spec (-> (System/getProperty "java.specification.version")
@@ -18,10 +20,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[insn "0.2.1"]
-                 [org.clojure/clojure "1.8.0"]
-                 [org.openjdk.jmh/jmh-core ~(:jmh version)]
-                 [org.openjdk.jmh/jmh-generator-reflection ~(:jmh version)]]
+  :dependencies ~dependencies
 
   :min-lein-version "2.0.0"
   :jar-exclusions [#".+\.java$"]
