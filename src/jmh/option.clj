@@ -23,17 +23,21 @@
   "The option sets available for the `jmh.core/run` :type option. By
   default, the following types are available:
 
-    :quick  1 fork, 5 warmup/measurement iterations.
-    :test   no forking, single-shot, 1 thread."
-  {:default {:fail-on-error true}
-   :quick {:fail-on-error true
-           :fork 1
-           :measurement 5
-           :warmup 5}
-   :test {:fail-on-error true
-          :fork 0
-          :mode :single-shot
-          :threads 1}})
+    :quick  1 fork (no warmup fork), 5 warmup/measurement iterations.
+    :test   no forking, single-shot.
+
+  The above built-in types are also available with the `jmh` prefix,
+  e.g., :jmh/quick.
+
+  Additionally, any named option sets from the benchmark environment
+  will be automatically merged into this map for convenience."
+  (let [quick {:fork {:count 1 :warmups 0}
+               :measurement 5
+               :warmup 5}
+        test {:fork 0
+              :mode :single-shot}]
+    {:jmh/quick quick, :quick quick
+     :jmh/test test, :test test}))
 
 ;;;
 
@@ -81,10 +85,12 @@
     (update-in (normalize opts) path conj arg)))
 
 (defn without-type-alias
-  "Return the given options with the :type alias expanded and merged. If
-  no type is provided, use the :default type. See `*type-aliases*`."
-  [opts]
-  (if-let [t (:type opts :default)]
-    (->> (dissoc opts :type)
-         (merge (normalize (util/check-valid "type" *type-aliases* t))))
-    opts))
+  "Return the given options with the :type alias expanded and merged.
+  See `*type-aliases*`."
+  ([opts] (without-type-alias opts {}))
+  ([opts option-sets]
+   (if-let [t (:type opts)]
+     (let [aliases (merge *type-aliases* option-sets)]
+       (->> (dissoc opts :type)
+            (merge (util/check-valid "type" aliases t))))
+     opts)))
