@@ -117,7 +117,7 @@
                  :threads (.getThreads p)
                  :thread-groups (zipmap (for [s (.getThreadGroupLabels p)
                                               :let [b (benchmark-data s)]]
-                                          (:name b (:fn b)))
+                                          (or (:name b (:fn b)) s))
                                         (.getThreadGroups p))
                  :warmup (edn (.getWarmup p)))
                 (edn (.getPrimaryResult r))
