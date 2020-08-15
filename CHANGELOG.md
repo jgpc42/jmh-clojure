@@ -1,9 +1,11 @@
 ## 0.4.0 (2020-XX-XX)
 
+* Automatically merge `:options` environment keys as `:type` aliases for convenience
 * Downgrade `insn` to `0.2.1` to avoid classpath collisions with (many popular) libraries that use older `ASM` versions
 * Upgrade JMH to latest version `1.24`
 * Rename `:profilers` result key to the more accurate `:secondary`
-* BUGFIX: emit all selected benchmarks to single class to enable JMH `:group` functionality (*in progress*)
+* BUGFIX: warmup `:select`s should only be run during warmup
+* BUGFIX: emit all selected benchmarks to single class to enable JMH `:group` functionality
 * BUGFIX: improper single-width prim loads with `:instrument` option
 * BUGFIX: option normalization should be done once at the end when all maps are merged
 

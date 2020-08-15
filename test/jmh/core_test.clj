@@ -17,6 +17,7 @@
 
 (deftest ^:integration test-sample
   (let [extern "io.github.jgpc42.jmh.sample.Benchmarks"
+        method #(symbol extern %)
         opts (assoc test/options
                     :params {:jmh/externs {:amount 100}}
                     :externs [extern])
@@ -25,11 +26,38 @@
              [sample/sum 0] [sample/sum 0]
              [sample/add 0] [sample/add 0]
              [sample/hasheq 1] [sample/hashcode 1]
-             [sample/consume 2] [sample/consume 2]
-             [~(symbol extern "spin") 1]]
-           (for [r result]
-             [(:fn r (:method r))
-              (count (:params r))])))
+             [sample/consume 2] [sample/consume 2]]
+           (for [r (take 9 result)]
+             [(:fn r) (count (:params r))])))
+
+    (is (= `#{[~(method "spin") 1]
+              [~(method "nothing") 1]}
+           (set (for [r (drop 9 result)]
+                  [(:method r) (count (:params r))]))))
+
+    (is (= `[jmh.sample/spin
+             jmh.sample/sum jmh.sample/sum
+             jmh.sample/add jmh.sample/add
+             jmh.sample/hasheq jmh.sample/hashcode
+             ~(method "spin")]
+           (for [r (core/run test/sample-env
+                     (assoc opts
+                            :select :non-void
+                            :externs [{:class extern :select #"spin"}]))]
+             (:fn r (:method r)))))
+
+    (is (= `[jmh.sample/spin
+             jmh.sample/add
+             jmh.sample/hasheq jmh.sample/hashcode
+             jmh.sample/consume jmh.sample/consume
+             ~(method "spin")]
+           (for [r (core/run test/sample-env
+                     (assoc opts
+                            ;; :status true, :verbose true
+                            :warmups {:select [:sum :inc]}
+                            :externs [{:class extern :select #"spin"}
+                                      {:class extern :select #"nothing" :warmup true}]))]
+             (:fn r (:method r)))))
 
     ;; disabled for CI
     #_
@@ -37,9 +65,8 @@
                    test/sample-env
                    (-> (assoc opts :fork {:count 1 :warmups 0})
                        (dissoc :mode)))]
-      (binding [*print-meta* true]
-        (prn result))
-      (is (= 10 (count result)))
+      ;; (binding [*print-meta* true] (prn result))
+      (is (= 11 (count result)))
       (is (= 9 (count (filter :index result)))))))
 
 (deftest ^:integration test-run

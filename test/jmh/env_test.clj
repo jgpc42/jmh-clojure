@@ -49,8 +49,8 @@
       1 {:select :a, :warmups {:select :f}})
     (is (= [{:name :a}
             {:name :c}
-            {:name :e}
-            {:name :d :warmup true}]
+            {:name :d :warmup true}
+            {:name :e :warmup true}]
            (->> (env/select-benchmarks selectors opts benchmarks)
                 (map #(select-keys % [:name :index :warmup])))))))
 

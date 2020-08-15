@@ -153,20 +153,19 @@
                             (if (ifn? x) x (eval x))))
 
         selects (util/keyword-seq (:select opts :jmh/default))
-        includes (util/keyword-seq (get-in opts [:warmups :select]))
+        warmup-selects (util/keyword-seq (get-in opts [:warmups :select]))
 
         selectors (merge (reduce (fn [m k]
                                    (assoc m k (comp #{k} :name)))
-                                 {} (concat selects includes))
+                                 {} (concat selects warmup-selects))
                          selectors)
 
-        warmups (when includes
-                  (filter-by-selectors selectors includes benchmarks))
-        benchmarks (filter-by-selectors selectors selects benchmarks)
+        warmups (when warmup-selects
+                  (filter-by-selectors selectors warmup-selects benchmarks))
+        benchmarks (filter-by-selectors selectors selects benchmarks)]
 
-        warmups (->> (remove (set benchmarks) warmups)
-                     (map #(assoc % :warmup true)))]
-    (concat benchmarks warmups)))
+    (concat (->> benchmarks (remove (set warmups)))
+            (->> warmups (map #(assoc % :warmup true))))))
 
 (defn finalize-benchmarks
   "Return the final benchmarks for running."

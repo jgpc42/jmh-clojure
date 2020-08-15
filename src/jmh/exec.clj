@@ -22,6 +22,11 @@
   [s]
   (str "\\Q" s "\\E"))
 
+(defn re-join
+  "Returns a pattern that is the alternation of the pattern sequence."
+  [xs]
+  (apply str (interpose "|" xs)))
+
 (defn re-class
   "Return a pattern that will match members of the given class."
   [cname members-pattern]
@@ -91,16 +96,19 @@
               (not status)
               (doto (File/createTempFile "jmh" ".txt") .deleteOnExit))
 
-        builder (OptionsBuilder.)]
+        builder (OptionsBuilder.)
+
+        warmups (include-patterns benchmarks (:externs opts) true)
+        include (remove (set warmups) (include-patterns benchmarks (:externs opts)))]
 
     (doseq [entry opts]
       (build builder entry))
 
-    (doseq [re (include-patterns benchmarks (:externs opts) true)]
-      (.exclude builder re)
-      (.includeWarmup builder re))
-    (doseq [re (include-patterns benchmarks (:externs opts))]
-      (.include builder re))
+    (when (seq warmups)
+      (.includeWarmup builder (re-join warmups)))
+    (if (seq include)
+      (.include builder (re-join include))
+      (.exclude builder "."))
 
     (when log
       (.output builder (str log)))

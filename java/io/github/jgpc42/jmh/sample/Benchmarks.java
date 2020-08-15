@@ -14,4 +14,9 @@ public class Benchmarks {
             throw new AssertionError("parameter not set");
         Thread.sleep(amount);
     }
+
+    @Benchmark
+    @BenchmarkMode(Mode.SingleShotTime)
+    public void nothing () {
+    }
 }
