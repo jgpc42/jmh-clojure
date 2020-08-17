@@ -1,4 +1,4 @@
 {:deps
- {insn {:mvn/version "0.2.1"}
+ {insn/insn {:mvn/version "0.2.1"}
   org.openjdk.jmh/jmh-core {:mvn/version "1.24"}
   org.openjdk.jmh/jmh-generator-reflection {:mvn/version "1.24"}}}
