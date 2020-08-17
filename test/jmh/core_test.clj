@@ -53,7 +53,7 @@
              ~(method "spin")]
            (for [r (core/run test/sample-env
                      (assoc opts
-                            ;; :status true, :verbose true
+                            ;; :status true, :verbose true, :mode :sample
                             :warmups {:select [:sum :inc]}
                             :externs [{:class extern :select #"spin"}
                                       {:class extern :select #"nothing" :warmup true}]))]
@@ -63,7 +63,9 @@
     #_
     (let [result (core/run
                    test/sample-env
-                   (-> (assoc opts :fork {:count 1 :warmups 0})
+                   (-> (assoc opts
+                              :fork {:count 1 :warmups 0}
+                              :status true, :verbose true)
                        (dissoc :mode)))]
       ;; (binding [*print-meta* true] (prn result))
       (is (= 11 (count result)))

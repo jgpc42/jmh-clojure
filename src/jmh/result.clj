@@ -8,7 +8,7 @@
            [java.util Map$Entry]
            [java.util.concurrent TimeUnit]
            [org.openjdk.jmh.infra BenchmarkParams IterationParams]
-           [org.openjdk.jmh.results Result RunResult]
+           [org.openjdk.jmh.results Result RunResult SampleTimeResult SingleShotResult]
            [org.openjdk.jmh.runner IterationType]
            [org.openjdk.jmh.runner.options TimeValue]
            [org.openjdk.jmh.util ScoreFormatter Statistics]))
@@ -152,8 +152,10 @@
           samples (.getSampleCount r)
 
           stats (.getStatistics r)
-          stats (when-not (or (<= (.getN stats) 2)
-                              (ScoreFormatter/isApproximate (.getScore r)))
+          stats (when (and (> (.getN stats) 2)
+                           (or (instance? SampleTimeResult r)
+                               (instance? SingleShotResult r)
+                               (not (ScoreFormatter/isApproximate (.getScore r)))))
                   (edn stats))]
       (with-meta
         (util/some-assoc
@@ -192,8 +194,7 @@
           histogram (map vector
                          (map #(vector (nth levels %) (nth levels (inc (long %))))
                               (range (dec (count levels))))
-                         (.getHistogram s (double-array levels)))
-          ]
+                         (.getHistogram s (double-array levels)))]
       (with-meta
         {:histogram histogram
          :max nmax
