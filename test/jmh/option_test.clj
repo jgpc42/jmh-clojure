@@ -8,4 +8,12 @@
        (opt/without-type-alias {:type :foo, :x 42 :y 17})))
   (is (= {:x 42, :y 17, :z 1000}
          (opt/without-type-alias {:type :foo :x 42 :y 17}
-                                 {:foo {:x 100, :z 1000}}))))
+                                 {:foo {:x 100, :z 1000}})))
+  (is (= {:x 42, :y 200, :z 2000}
+         (opt/without-type-alias {:type [:foo :bar] :x 42}
+                                 {:foo {:x 100, :z 1000}
+                                  :bar {:y 200, :z 2000}})))
+  (is (= {:x 100, :y 200, :z 1000}
+         (opt/without-type-alias {:type [:bar :foo]}
+                                 {:foo {:x 100, :z 1000}
+                                  :bar {:y 200, :z 2000}}))))

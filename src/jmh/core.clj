@@ -57,10 +57,10 @@
                     display the log output while running. If a string,
                     write it to the given file. Overrides :progress.
 
-    :type           keyword. An alias for a common option set. For
-                    example, :quick. Options sets described in env are
-                    automatically merged for convenience. See the
-                    `jmh.option` namespace for more.
+    :type           keyword or keyword seq. Aliases for common option
+                    sets. For example, :quick. Option groups described
+                    in env are automatically merged for convenience. See
+                    the `jmh.option` namespace for more.
 
     :verbose        if true or :extra, generate additional :status
                     output during the run. If :silent or false, don't

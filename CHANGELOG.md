@@ -1,6 +1,7 @@
 ## 0.4.0 (2020-XX-XX)
 
 * Automatically merge `:options` environment keys as `:type` aliases for convenience
+* Support multiple `:type` aliases as seq
 * Downgrade `insn` to `0.2.1` to avoid classpath collisions with (many popular) libraries that use older `ASM` versions
 * Upgrade JMH to latest version `1.24`
 * Rename `:profilers` result key to the more accurate `:secondary`

@@ -85,12 +85,14 @@
     (update-in (normalize opts) path conj arg)))
 
 (defn without-type-alias
-  "Return the given options with the :type alias expanded and merged.
+  "Return the given options with the :type aliases expanded and merged.
   See `*type-aliases*`."
   ([opts] (without-type-alias opts {}))
   ([opts option-sets]
-   (if-let [t (:type opts)]
+   (if (:type opts)
      (let [aliases (merge *type-aliases* option-sets)]
-       (->> (dissoc opts :type)
-            (merge (util/check-valid "type" aliases t))))
+       (apply merge
+              (concat (for [t (util/keyword-seq (:type opts))]
+                        (util/check-valid "type" aliases t))
+                      (dissoc opts :type))))
      opts)))
