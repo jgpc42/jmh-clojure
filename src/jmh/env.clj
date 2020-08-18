@@ -119,9 +119,10 @@
                 :when (util/class-symbol? x)]
             x)
           (for [x (-> env :jmh/options :externs)]
-            (if (map? x)
-              (name (:class x))
-              (name x)))))
+            (cond
+              (map? x) (name (:class x))
+              (class? x) (.getName ^Class x)
+              :else (name x)))))
 
 (defn- class-name
   "Return a package-prefixed class name."

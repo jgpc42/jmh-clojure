@@ -30,7 +30,10 @@
 (defn re-class
   "Return a pattern that will match members of the given class."
   [cname members-pattern]
-  (str "^" (re-escape cname) "\\." members-pattern))
+  (let [cname (if (class? cname)
+                (.getName ^Class cname)
+                cname)]
+    (str "^" (re-escape cname) "\\." members-pattern)))
 
 (defn forked-with-arguments?
   "Return true if the benchmark will run forked with new JVM arguments."
