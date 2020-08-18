@@ -13,7 +13,7 @@
          (opt/without-type-alias {:type [:foo :bar] :x 42}
                                  {:foo {:x 100, :z 1000}
                                   :bar {:y 200, :z 2000}})))
-  (is (= {:x 100, :y 200, :z 1000}
-         (opt/without-type-alias {:type [:bar :foo]}
+  (is (= {:x 100, :y 200, :z 1000, :quux "ok"}
+         (opt/without-type-alias {:type [:bar :foo] :quux "ok"}
                                  {:foo {:x 100, :z 1000}
                                   :bar {:y 200, :z 2000}}))))

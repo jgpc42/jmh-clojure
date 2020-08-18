@@ -94,5 +94,5 @@
        (apply merge
               (concat (for [t (util/keyword-seq (:type opts))]
                         (util/check-valid "type" aliases t))
-                      (dissoc opts :type))))
+                      [(dissoc opts :type)])))
      opts)))
