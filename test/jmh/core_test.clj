@@ -6,7 +6,7 @@
             [clojure.set :as set]
             [clojure.test :refer :all]))
 
-(deftest test-profilers
+(deftest ^:integration test-profilers
   (is (set/select (comp #{"gc"} :name)
                   (core/profilers))))
 
