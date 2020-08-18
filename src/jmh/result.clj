@@ -69,7 +69,9 @@
 
              init (if (.startsWith bname class)
                     (or (benchmark-data bname)
-                        {})
+                        (let [idx (inc (.lastIndexOf bname "."))
+                              gname (demunge (subs bname idx))]
+                          {:fn (keyword "group" gname) :name (keyword gname)}))
                     (let [idx (.lastIndexOf bname ".")
                           method (symbol (subs bname 0 idx)
                                          (subs bname (inc idx)))]

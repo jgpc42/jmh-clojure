@@ -64,8 +64,8 @@
     (let [result (core/run
                    test/sample-env
                    (-> (assoc opts
-                              :fork {:count 1 :warmups 0}
-                              :status true, :verbose true)
+                              ;; :status true, :verbose true
+                              :fork {:count 1 :warmups 0})
                        (dissoc :mode)))]
       ;; (binding [*print-meta* true] (prn result))
       (is (= 11 (count result)))
@@ -107,4 +107,8 @@
         [res & more] (core/run env opts)]
     #_(pp res)
     (is (nil? more))
-    (is (= {:put 3, :take 1} (:thread-groups res)))))
+    (is (= {:put 3, :take 1} (:thread-groups res)))
+    (is (= :group/g (:fn res)))
+    (is (= :g (:name res)))
+    (is (= [:put :take]
+           (map :name ((juxt :put :take) (:secondary res)))))))
