@@ -3,7 +3,6 @@
   (:require [jmh.env :as env]
             [jmh.exec :as exec]
             [jmh.generate :as gen]
-            [jmh.option :as option]
             [jmh.result :as result]
             [jmh.util :as util]
             [jmh.instrument :as instrument])
@@ -104,7 +103,7 @@
    (let [ns (Namespace/findOrCreate (gensym "jmh.run"))
          v (intern ns 'fn f)
          env {:benchmarks [{:fn (util/var-symbol v)}]}]
-     (first (run env (option/without-forking opts))))))
+     (first (run env (assoc opts :jmh/in-process true))))))
 
 (defmacro run-expr
   "Benchmark an expression. Equivalent to: (run-fn (fn [] expr) opts)."

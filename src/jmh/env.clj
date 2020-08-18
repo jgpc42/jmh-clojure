@@ -219,7 +219,7 @@
   [env opts]
   (let [opts (-> (option/without-type-alias opts (:options env))
                  option/normalize)
-        opts (if (:instrument opts)
+        opts (if (or (:instrument opts) (:jmh/in-process opts))
                (option/without-forking opts)
                opts)
         opts (if (:ignore-lock opts)
