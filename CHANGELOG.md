@@ -1,4 +1,4 @@
-## 0.4.0 (2020-XX-XX)
+## 0.4.0 (2020-08-19)
 
 * Automatically merge `:options` environment keys as `:type` aliases for convenience
 * Support multiple `:type` aliases as seq
