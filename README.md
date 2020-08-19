@@ -8,13 +8,13 @@
 [Leiningen][lein]
 
 ``` clojure
-[jmh-clojure "0.3.1"]
+[jmh-clojure "0.4.0"]
 ```
 
 [tools.deps][deps]
 
 ```clojure
-{jmh-clojure {:mvn/version "0.3.1"}}
+{jmh-clojure/jmh-clojure {:mvn/version "0.4.0"}}
 ```
 
 [Maven][maven]
@@ -23,7 +23,7 @@
 <dependency>
   <groupId>jmh-clojure</groupId>
   <artifactId>jmh-clojure</artifactId>
-  <version>0.3.1</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 
@@ -32,7 +32,7 @@ JDK versions 8 to 14 and Clojure versions 1.7 to 1.10 are currently [supported][
 
 ### What is it?
 
-This library provides a data-oriented API to [JMH][jmh], the Java Microbenchmark Harness. It can be used directly or via Leiningen with [lein-jmh][lein-jmh].
+This library provides a data-oriented API to [JMH][jmh], the Java Microbenchmark Harness.
 
 JMH is developed by OpenJDK JVM experts and goes to great lengths to ensure accurate benchmarks. Benchmarking on the JVM is a complex beast and, by extension, JMH takes a bit of effort to learn and use properly. That being said, JMH is very robust and configurable. If you are new to JMH, I would recommend browsing the [sample][samples] code and javadocs before using this library.
 
@@ -79,7 +79,7 @@ I have omitted showing the `demo.utils` namespace for brevity, it is defined [he
 
 The above data should be fairly easy to understand. It is also a limited view of what can be specified. The [sample file][sample] provides a complete reference and explanation.
 
-Now to run the benchmarks. We'll start a REPL in our project and evaluate the following. Note that we could instead use [lein-jmh][lein-jmh] to automate this entire process.
+Now to run the benchmarks. We'll start a REPL in our project and evaluate the following. Note that we could instead use [lein-jmh][lein-jmh] or one of the other [supported tools](#tooling-support) to automate this entire process.
 
 ```clojure
 (require '[jmh.core :as jmh]
@@ -111,6 +111,10 @@ Note that the above results were taken from multiple [runs][result], which is al
 
 Benchmarking expressions or fns manually without the data specification is also supported. For example, the `run-expr` macro provides an interface similar to criterium, and allows benchmarking of code that only resides in memory (that you are updating in a REPL, for example), rather than on disk (loadable via `require`). However, this forgoes JMH process isolation. For more on why benchmarking this way on the JVM can be sub-optimal, see [here][extended].
 
+### Tooling support
+
+This library can be used directly in a [bare REPL][bare], as shown above, or standalone via [tools.deps][cli]. For a more robust experience, see the [`jmh-clojure/task`][task] project. This companion library provides some additional convenience features like sorting, table output, easy uberjar creation, and more. It can be easily integrated with tools like [Leiningen][lein-jmh].
+
 ### More information
 
 As previously mentioned, please see the [sample file][sample] for the complete benchmark environment reference. For `run` options, see the [docs][run-doc]. Also, see the [wiki][wiki] for additional examples and topics.
@@ -127,14 +131,16 @@ Or, `lein test-all` for all supported Clojure versions.
 
 ### License
 
-Copyright © 2020 Justin Conklin
+Copyright © 2017-2020 Justin Conklin
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
 
 
 [alias-doc]:  https://jgpc42.github.io/jmh-clojure/doc/jmh.option.html#var-*type-aliases*
+[bare]:       https://github.com/jgpc42/jmh-clojure/wiki/Bare-REPL
 [ci]:         https://github.com/jgpc42/jmh-clojure/blob/master/.github/workflows/test.yml
+[cli]:        https://github.com/jgpc42/jmh-clojure/wiki/Clojure-1.9-CLI
 [criterium]:  https://github.com/hugoduncan/criterium
 [deps]:       https://github.com/clojure/tools.deps.alpha
 [extended]:   https://github.com/jgpc42/jmh-clojure/wiki/Extended
@@ -149,6 +155,7 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [sample]:     https://github.com/jgpc42/jmh-clojure/blob/master/resources/sample.jmh.edn
 [samples]:    http://hg.openjdk.java.net/code-tools/jmh/file/1ddf31f810a3/jmh-samples/src/main/java/org/openjdk/jmh/samples/
 [talk]:       https://github.com/jgpc42/london-clojurians-jmh-talk-2020
+[task]:       https://github.com/jgpc42/lein-jmh/tree/master/task
 [utils]:      https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-utils-clj
 [video]:      https://www.youtube.com/watch?v=_6qVfFkBdWI
 [wiki]:       https://github.com/jgpc42/jmh-clojure/wiki
