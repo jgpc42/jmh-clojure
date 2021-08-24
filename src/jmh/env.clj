@@ -176,8 +176,7 @@
 
         finalize
         (fn [idx b]
-          (let [prefix (format "_%03d" idx)
-                meth (str prefix "_" (munge (name (:name b (:fn b)))))
+          (let [meth (format "_%03d_%s" idx (munge (name (:name b (:fn b)))))
                 merged (merge-options (:options b) opt-selectors opts)]
             (assoc b :class (:jmh/benchmark-class env)
                    :method meth, :index idx, :options merged

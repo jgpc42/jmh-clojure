@@ -109,7 +109,7 @@
 ;;;
 
 (defn fn-field-name [b]
-  (str "_" (:index b) "_fn"))
+  (format "__%03d_fn" (:index b)))
 
 (defn class-field
   "Return static field data for the given benchmark."
