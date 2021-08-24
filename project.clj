@@ -14,7 +14,7 @@
             [(str "-Xbootclasspath:"
                    (-> (java.io.File. root "jre/lib/rt.jar") .getCanonicalPath))])])))
 
-(defproject jmh-clojure "0.4.1-SNAPSHOT"
+(defproject jmh-clojure "0.4.1"
   :description "Benchmarking with JMH, the Java Microbenchmark Harness, from Clojure."
   :url "https://github.com/jgpc42/jmh-clojure"
   :license {:name "Eclipse Public License"

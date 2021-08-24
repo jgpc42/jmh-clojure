@@ -8,13 +8,13 @@
 [Leiningen][lein]
 
 ``` clojure
-[jmh-clojure "0.4.0"]
+[jmh-clojure "0.4.1"]
 ```
 
 [tools.deps][deps]
 
 ```clojure
-{jmh-clojure/jmh-clojure {:mvn/version "0.4.0"}}
+{jmh-clojure/jmh-clojure {:mvn/version "0.4.1"}}
 ```
 
 [Maven][maven]
@@ -23,7 +23,7 @@
 <dependency>
   <groupId>jmh-clojure</groupId>
   <artifactId>jmh-clojure</artifactId>
-  <version>0.4.0</version>
+  <version>0.4.1</version>
 </dependency>
 ```
 
@@ -113,7 +113,7 @@ Benchmarking expressions or fns manually without the data specification is also 
 
 ### Tooling support
 
-This library can be used directly in a [bare REPL][bare], as shown above, or standalone via [tools.deps][cli]. For a more robust experience, see the [`jmh-clojure/task`][task] project. This companion library provides some additional convenience features like sorting, table output, easy uberjar creation, and more. It can be easily integrated with tools like [Leiningen][lein-jmh].
+This library can be used directly in a [bare REPL][bare], as shown above, or standalone via [tools.deps][cli]. For a more robust experience, see the [`jmh-clojure-task`][task] project. This companion library provides some additional convenience features like sorting, table output, easy uberjar creation, and more. It can be easily integrated with tools like [Leiningen][lein-jmh].
 
 ### More information
 
@@ -144,7 +144,7 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [criterium]:  https://github.com/hugoduncan/criterium
 [deps]:       https://github.com/clojure/tools.deps.alpha
 [extended]:   https://github.com/jgpc42/jmh-clojure/wiki/Extended
-[jmh]:        http://openjdk.java.net/projects/code-tools/jmh/
+[jmh]:        https://github.com/openjdk/jmh
 [lein]:       http://github.com/technomancy/leiningen
 [lein-jmh]:   https://github.com/jgpc42/lein-jmh
 [london]:     https://www.meetup.com/London-Clojurians/
@@ -153,9 +153,9 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [result]:     https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-results-edn
 [run-doc]:    https://jgpc42.github.io/jmh-clojure/doc/jmh.core.html#var-run
 [sample]:     https://github.com/jgpc42/jmh-clojure/blob/master/resources/sample.jmh.edn
-[samples]:    http://hg.openjdk.java.net/code-tools/jmh/file/1ddf31f810a3/jmh-samples/src/main/java/org/openjdk/jmh/samples/
+[samples]:    https://github.com/openjdk/jmh/tree/41548a7/jmh-samples/src/main/java/org/openjdk/jmh/samples
 [talk]:       https://github.com/jgpc42/london-clojurians-jmh-talk-2020
-[task]:       https://github.com/jgpc42/lein-jmh/tree/master/task
+[task]:       https://github.com/jgpc42/jmh-clojure-task
 [utils]:      https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-utils-clj
 [video]:      https://www.youtube.com/watch?v=_6qVfFkBdWI
 [wiki]:       https://github.com/jgpc42/jmh-clojure/wiki

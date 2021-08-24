@@ -2,7 +2,7 @@
 ;; the example fns used in this file.
 ;;
 ;; For more information on jmh benchmarking, please see the openjdk
-;; jmh-samples project at http://hg.openjdk.java.net/code-tools/jmh.
+;; jmh-samples project at https://github.com/openjdk/jmh.
 
 {
  :benchmarks
@@ -110,11 +110,11 @@
 
   :example
   {
-   :group :A               ;; Thread group name.
+   :group :A               ;; Thread group name. Specify thread count via :threads.
    :mode :average          ;; Defaults to :throughput. May also be a sequence, or :all.
    :ops-per-invocation 10  ;; The amount of logical "operations" per call.
    :output-time-unit :sec  ;; Report results using the following time unit.
-   :threads 3              ;; Worker threads to use.
+   :threads 3              ;; Worker threads to use for each iteration.
    :timeout [500 :ms]      ;; Interrupt the worker thread if the run exceeds this maximum.
 
    :fork        ;; Give a number instead of a map to specify only the :count.

@@ -1,3 +1,7 @@
+## 0.4.1 (2021-08-24)
+
+* Upgrade JMH to version `1.32`
+
 ## 0.4.0 (2020-08-19)
 
 * Automatically merge `:options` environment keys as `:type` aliases for convenience
