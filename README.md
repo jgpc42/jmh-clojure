@@ -27,7 +27,7 @@
 </dependency>
 ```
 
-JDK versions 8 to 14 and Clojure versions 1.7 to 1.10 are currently [supported][ci].
+JDK versions 8 to 16 and Clojure versions 1.7 to 1.10 are currently [tested against][ci].
 </details>
 
 ### What is it?
