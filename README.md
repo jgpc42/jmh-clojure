@@ -101,6 +101,8 @@ Now to run the benchmarks. We'll start a REPL in our project and evaluate the fo
 ;;     {:name :vec, :params {:count 100000}, :score [8.5783753539823E7 "ops/s"]})
 ```
 
+> **Note:** due to the way jmh-clojure [works][works], the `*compile-path*` directory should exist and be on your classpath before benchmarking. This is automated by tools like Leiningen. For `tools.deps`, see [here][task-cp].
+
 The `run` fn takes a benchmark environment and an optional map. We select the `:quick` type: an [alias][alias-doc] for some common options. We override our default `:count` parameter sequence to measure our fn against small and large inputs. We also enable the gc profiler.
 
 Notice how we have four results: one for each combination of parameter and benchmark fn. For this example, we have omitted lots of additional result map data, including the [profiler][profilers] information.
@@ -156,6 +158,8 @@ Distributed under the Eclipse Public License, the same as Clojure.
 [samples]:    https://github.com/openjdk/jmh/tree/41548a7/jmh-samples/src/main/java/org/openjdk/jmh/samples
 [talk]:       https://github.com/jgpc42/london-clojurians-jmh-talk-2020
 [task]:       https://github.com/jgpc42/jmh-clojure-task
+[task-cp]:    https://github.com/jgpc42/jmh-clojure-task#usage
 [utils]:      https://gist.github.com/jgpc42/4d8a828f8d0739748afa71035f2b2c9c#file-utils-clj
 [video]:      https://www.youtube.com/watch?v=_6qVfFkBdWI
 [wiki]:       https://github.com/jgpc42/jmh-clojure/wiki
+[works]:      https://github.com/jgpc42/jmh-clojure/wiki/How-It-Works

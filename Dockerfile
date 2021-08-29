@@ -1,8 +1,7 @@
 FROM openjdk:8
 
 WORKDIR /root
-COPY project.clj /root
-COPY deps.edn /root
+COPY project.clj deps.edn /root/
 
 RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 RUN chmod +x lein
