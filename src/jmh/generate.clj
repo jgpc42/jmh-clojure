@@ -54,7 +54,7 @@
         dest (proxy [GeneratorDestination] []
                (getResource [_]
                  (throw (IOException.)))
-               (newClass [cname]
+               (newClass [cname _]
                  (let [w (StringWriter.)]
                    (vswap! srcs assoc cname w)
                    (PrintWriter. w true)))
