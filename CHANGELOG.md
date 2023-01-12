@@ -1,3 +1,10 @@
+## 0.4.2-SNAPSHOT (20XX-XX-XX)
+
+* Upgrade JMH to version `1.35`
+* Explicit support for JDK 15, 16, 17, and 18
+* Explicit support for Clojure 1.11
+* Improve error message when benchmark `:name` is invalid Java method identifier ([#10][issue10])
+
 ## 0.4.1 (2021-08-24)
 
 * Upgrade JMH to version `1.32`
@@ -70,5 +77,6 @@
 
 
 
-[issue1]:  https://github.com/jgpc42/jmh-clojure/issues/1
-[issue2]:  https://github.com/jgpc42/jmh-clojure/issues/2
+[issue1]:   https://github.com/jgpc42/jmh-clojure/issues/1
+[issue2]:   https://github.com/jgpc42/jmh-clojure/issues/2
+[issue10]:  https://github.com/jgpc42/jmh-clojure/issues/10

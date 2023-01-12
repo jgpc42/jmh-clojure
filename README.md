@@ -27,7 +27,7 @@
 </dependency>
 ```
 
-JDK versions 8 to 16 and Clojure versions 1.7 to 1.10 are currently [tested against][ci].
+JDK versions 8 to 18 and Clojure versions 1.7 to 1.11 are currently [tested against][ci].
 </details>
 
 ### What is it?
@@ -133,7 +133,7 @@ Or, `lein test-all` for all supported Clojure versions.
 
 ### License
 
-Copyright © 2017-2022 Justin Conklin
+Copyright © 2017-2023 Justin Conklin
 
 Distributed under the Eclipse Public License, the same as Clojure.
 

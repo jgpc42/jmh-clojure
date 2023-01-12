@@ -168,6 +168,19 @@
     (concat (->> benchmarks (remove (set warmups)))
             (->> warmups (map #(assoc % :warmup true))))))
 
+(defn- java-identifier? [^String s]
+  (let [xs (-> s .codePoints .iterator iterator-seq)]
+    (and xs
+         (Character/isJavaIdentifierStart ^int (first xs))
+         (every? #(Character/isJavaIdentifierPart ^int %) (next xs)))))
+
+(defn- munge-method-suffix [b]
+  (let [s (munge (name (:name b (:fn b))))]
+    (if (or (not (:name b)) (java-identifier? s))
+      s
+      (throw (ex-info (format "benchmark name %s, after munging, is invalid identifier" (:name b))
+                      {:name (:name b), :munged s})))))
+
 (defn finalize-benchmarks
   "Return the final benchmarks for running."
   [{resolver :jmh/resolver :as env}]
@@ -176,7 +189,7 @@
 
         finalize
         (fn [idx b]
-          (let [meth (format "_%03d_%s" idx (munge (name (:name b (:fn b)))))
+          (let [meth (format "_%03d_%s" idx (munge-method-suffix b))
                 merged (merge-options (:options b) opt-selectors opts)]
             (assoc b :class (:jmh/benchmark-class env)
                    :method meth, :index idx, :options merged
