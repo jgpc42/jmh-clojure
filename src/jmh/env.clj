@@ -176,9 +176,10 @@
 
 (defn- munge-method-suffix [b]
   (let [s (munge (name (:name b (:fn b))))]
-    (if (or (not (:name b)) (java-identifier? s))
+    (if (java-identifier? s)
       s
-      (throw (ex-info (format "benchmark name %s, after munging, is invalid identifier" (:name b))
+      (throw (ex-info (format "benchmark %s %s, after munging, is invalid identifier"
+                              (if (:name b) "name" "var") (or (:name b) (:fn b)))
                       {:name (:name b), :munged s})))))
 
 (defn finalize-benchmarks
