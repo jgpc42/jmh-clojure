@@ -34,7 +34,7 @@
     (is (= [".Quux" ".Bar" ".Foo" ".Object"] @loads))))
 
 (deftest test-compile-error
-  (let [srcs {"foo.quux" "packag foo; impor bar;"}]
+  (let [srcs {"foo.quux" "package foo.; import bar.;"}]
     (is (thrown-with-msg? clojure.lang.ExceptionInfo
                           #"/foo/quux\.java: line 1: .+\n\.\.\. and 1 more$"
                           (java/compile srcs)))))
