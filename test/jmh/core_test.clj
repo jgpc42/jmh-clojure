@@ -64,10 +64,12 @@
     (let [result (core/run
                    test/sample-env
                    (-> (assoc opts
-                              ;; :status true, :verbose true
+                              :status true, :verbose true
+                              :profilers ["gc"]
                               :fork {:count 1 :warmups 0})
                        (dissoc :mode)))]
-      ;; (binding [*print-meta* true] (prn result))
+      (pp result)
+      (pp (meta result))
       (is (= 11 (count result)))
       (is (= 9 (count (filter :index result)))))))
 

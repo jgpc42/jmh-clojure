@@ -79,16 +79,13 @@
 
              secondary (reduce-kv
                         (fn [m ^String k v]
-                          (if-let [[_ pct] (re-find #"\u00b7p([\d.]+)$" k)]
+                          (if-let [[_ pct] (re-matches #"p([\d.]+)" k)]
                             (let [pct (* 100 (double (Double/valueOf ^String pct)))]
                               (update m :percentiles assoc-sorted pct (edn v)))
                             (if-let [b (benchmark-data k)]
                               (update m :secondary assoc-sorted (:name b (:fn b))
                                       (merge b (edn v)))
-                              (let [kind (if (.startsWith k "\u00b7")
-                                           (subs k 1)
-                                           k)]
-                                (update m :secondary assoc-sorted kind (edn v))))))
+                              (update m :secondary assoc-sorted k (edn v)))))
                         {} (into {} (.getSecondaryResults r)))
 
              nprefix (count state/param-field-prefix)
