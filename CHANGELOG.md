@@ -1,7 +1,7 @@
 ## 0.4.2-SNAPSHOT (20XX-XX-XX)
 
-* Upgrade JMH to version `1.35`
-* Explicit support for JDK 15, 16, 17, and 18
+* Upgrade JMH to version `1.37`
+* Explicit support for JDKs 15-21
 * Explicit support for Clojure 1.11
 * Improve error message when benchmark `:name` is invalid Java method identifier ([#10][issue10])
 
