@@ -133,7 +133,7 @@ Or, `lein test-all` for all supported Clojure versions.
 
 ### License
 
-Copyright © 2017-2024 Justin Conklin
+Copyright © 2017-2025 Justin Conklin
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
