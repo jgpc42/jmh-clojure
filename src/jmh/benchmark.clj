@@ -127,7 +127,10 @@
                  [:invokeinterface ftype "invokePrim" desc])
 
         return (if (:void b)
-                 [[:pop] [:return]]
+                 [(if (#{:long :double} return)
+                    [:pop2]
+                    [:pop])
+                  [:return]]
                  (condp = return
                    :long [:lreturn]
                    :double [:dreturn]
